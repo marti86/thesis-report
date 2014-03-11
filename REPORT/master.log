@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2012.4.23)  11 MAR 2014 14:47
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2012.4.23)  11 MAR 2014 15:27
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1759,18 +1759,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 77--78
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 95--96
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
 
  []
 
-<figures/sdn-arch.png, id=160, 434.5836pt x 339.1872pt>
+<figures/sdn-arch.png, id=159, 434.5836pt x 339.1872pt>
 File: figures/sdn-arch.png Graphic file (type png)
 
-<use figures/sdn-arch.png> [4 <./figures/sdn-arch.png>]
-<figures/cog-pro.png, id=173, 702.625pt x 451.6875pt>
+<use figures/sdn-arch.png> [4]
+<figures/cog-pro.png, id=171, 702.625pt x 451.6875pt>
 File: figures/cog-pro.png Graphic file (type png)
 
-<use figures/cog-pro.png> [5 <./figures/cog-pro.png>])
+<use figures/cog-pro.png> [5 <./figures/sdn-arch.png>])
 (./chapters/introduction/problemformulation.tex
 Underfull \hbox (badness 10000) in paragraph at lines 4--5
 
@@ -1781,13 +1781,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 6--7
 
  []
 
-)) (./master.bbl [6]) (./appendix/appendix.tex [7
+[6 <./figures/cog-pro.png>])) (./master.bbl [7] [8
 
-] [8
+]) (./appendix/appendix.tex
+[9] [10
 
 ]
 Appendix A.
-) AED: lastpage setting LastPage [9]
+) AED: lastpage setting LastPage [11]
 
 FiXme Summary: Number of notes: 0,
 (FiXme)        Number of warnings: 0,
@@ -1807,8 +1808,8 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 24159 strings out of 493747
- 417230 string characters out of 3143546
+ 24161 strings out of 493747
+ 417244 string characters out of 3143546
  631417 words of memory out of 3000000
  26724 multiletter control sequences out of 15000+200000
  92922 words of font info for 76 fonts, out of 3000000 for 9000
@@ -1827,10 +1828,10 @@ fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2010/texmf-dist/fonts/type
 1/public/lm/lmri9.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/lm
 /lmss10.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/lm/lmssbx10.
 pfb>
-Output written on master.pdf (15 pages, 489020 bytes).
+Output written on master.pdf (17 pages, 490622 bytes).
 PDF statistics:
- 254 PDF objects out of 1000 (max. 8388607)
- 201 compressed objects within 3 object streams
- 49 named destinations out of 1000 (max. 500000)
+ 262 PDF objects out of 1000 (max. 8388607)
+ 207 compressed objects within 3 object streams
+ 51 named destinations out of 1000 (max. 500000)
  172 words of extra memory for PDF output out of 10000 (max. 10000000)
 
