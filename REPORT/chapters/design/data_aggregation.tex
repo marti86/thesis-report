@@ -1,0 +1,134 @@
+\section{In-network data aggregation}
+\label{sec:data_aggregation}
+% concatenation
+% - sizes (75 - 150 - 250)
+% - limits (memory)
+% - (structure / tree)
+The delimitations chapter described in detail which methods can and cannot be used for data aggregation. This chapter will go deeper into this topic and cover the methods actually used.
+
+To recapitulate: a tree structure is given and spread into the network. This means that every node except plain meters know about their children and parent. An initial request for data collection is sent from the concentrator as broadcast and will be forwarded by every network device, except meters. However, meters will be requested sequentially from its associated router to reduce the number of collisions. If a collision between a router and a meter happens the router will recognize the collision by receiving a timeout and send a new request. Collisions between routers will be avoided by introducing a simple CSMA. All network devices are very limited in terms of memory. Smart meters can generate packets with sizes between 75 and 150 bytes and any packet can never be larger than 250 bytes.\\
+The tree structure combined with the broadcasts allow multiple packets to arrive at nearly the same time. These packets can be simple packets, meaning that they contain data from a single meter or an already concatenated packet with data from multiple meters. The task is to concatenate these data in order to reduce the total amount of packets. This problem can be formulated by the bin packing problem described in the following section.
+
+\subsection{Bin Packing Problem}
+\label{sec:bin_backing_problem}
+Given a number of bins $k\in\mathbb{N}^+$ with a certain limit $b\in\mathbb{N}^+$ and a number of parcels $n\in\mathbb{N}^+$ each with a specific size $a_1,a_2,...,a_n\leq b$. The question is how to combine parcels so that they will fit into the bins and the number of bins will be minimized, while none of the bins being overfilled.\\
+An answer for this problem cannot be given easily because of its NP-hardness. This means that as long as no proof exists that the sets P and NP equal, it must be assumed that \mbox{P $\neq$ NP} and therfore no deterministic algorithm can be found which solves the problem in polynomial time.\\
+However, a ``fairly'' good solution can be found using a heuristic approach. A basic heuristic approach is called ``first fit decreasing'' which orders the parcels in decreasing order and places the largest one in the first bin. This moving of parcels will be repeated until all parcels are moved to bins. If all bins are filled, but parcels remain unpacked no solution could be found. However, this case must not be considered in an implementation since bins can be created on the fly.\\
+The complexity of this approach is given by the complexity of the two sub-problems:
+\begin{itemize}
+\item sorting the parcels $\mathcal{O}(n \log(n))$
+\item moving of parcels to bins $\mathcal{O}(n)$
+\item total complexity $\mathcal{O}(n \log(n)) + \mathcal{O}(n) = \mathcal{O}(n \log(n) + n) = \mathcal{O}(n \log(n))$
+\end{itemize}
+The Fast Data Collection protocol uses this approach and changes it only slightly. Since the memory is very limited and a bin (a concatenated packet) can be generated without much effort only one bin is available at a time. To find suitable packets for this bin the packets will be sorted in decreasing order. A loop will iterate over this sorted list and take every packet that fits into the bin without overfilling it. As mentioned before, this  approach does not provide an optimal solution, but a fairly good one. This approach can be expressed as an algorithm as shown below (algorithm \ref{algo:pseudocode_2}).
+\begin{algorithm}
+	\KwData{N: Set of parcels, $b$: maximum size of bin}
+	\KwResult{B: elements for the bin}
+	$\text{MergeSort}_{\text{dec}}\text{(N)}$\;
+	limit $\leftarrow$ 0\;
+	\For{i $\leftarrow$ 0 to |N|}{
+		\If{limit + $\text{N}_i \leq b$}{
+			limit $\leftarrow$ limit + N(i)\;
+			B = B $\cup$ \{$\text{N}_i$\}\;
+			N = N $\setminus$ \{$\text{N}_i$\}\; 
+		}
+	}
+	\caption{First Fit Decreasing as implemented by Fast Data Collection}
+	\label{algo:pseudocode_2}
+\end{algorithm}
+
+To get an image of how well the algorithm actually works, the efficiency of the algorithm had been tested in an independent application. The initial values of the set N are generated randomly using the rand()-function from the C standard library. This had been done to avoid choosing too structured data that could falsify the results. Table \ref{table:ffd_values} will show the generated values, followed by the tables \ref{table:run1} - \ref{table:run5} giving the results of the test runs.
+
+%\begin{tabular}{|l||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+%\hline 
+%run & \multicolumn{16}{c|}{generated values} \\ \hline
+%1 & 116 & 92 & 109 & 100 & 119 & 124 & 78 & 108 & 112 & 89 & 80 & 95 & 106 & 102 & 136 & 116 \\ \hline
+%2 & 139 & 142 & 120 & 76 & 110 & 122 & 93 & 91 & 98 & 79 & 122 & 91 & 98 & 75 & 97 & 135 \\ \hline
+%3 & 146 & 96 & 82 & 135 & 89 & 97 & 126 & 104 & 148 & 109 & 140 & 105 & 95 & 141 & 101 & 113 \\ \hline
+%4 & 120 & 107 & 126 & 111 & 111 & 130 & 95 & 138 & 77 & 117 & 97 & 91 & 149 & 142 & 129 & 141 \\ \hline
+%5 & 87 & 146 & 134 & 104 & 135 & 116 & 139 & 94 & 120 & 128 & 124 & 145 & 92 & 111 & 90 & 135 \\ \hline
+%\end{tabular}
+
+\begin{table}
+\includegraphics[width=1\textwidth]{figures/data_aggregation_runs}
+\caption{Uniformly generated measurement sizes in range [75;150] for 5 runs}
+\label{table:ffd_values}
+\end{table}
+
+In every run 16 packets are created. This is much more than a device in the network can hold. Nonetheless, it was allowed in order to get a good understanding of how the aggregation actually works; to find its weaknesses and strengths. The following tables will show the results of the test runs. The first row shows a bin (concatenated packet). The two or three values indicate the sizes of the simple packets included. Each column shows one run of the algorithm. The second row shows the summed size of the of the simple packets. Remember that this value cannot exceed 250. To show how good the concatenation was, row 3 provides a value indicating the filling of the new packet in percent, whereas the fourth row gives a measure of the filling of all the bins (average).
+
+\begin{table}[H]
+	\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+	\hline
+	\multirow{2}{*}{concatenated packet} & 136 & 124 & 116 & 109 & 106 & 100 & 92 & 80 \\
+	& 112 & 119 & 116 & 108 & 102 & 95 & 89 & 78 \\ \hline
+	new packet size & 248 & 243 & 232 & 217 & 208 & 195 & 181 & 158 \\ \hline
+	filling	(\%) & 99.20 & 97.20 & 92.80 & 86.80 & 83.20 & 78.00 & 72.40 & 63.20 \\ \hline
+	average filling	(\%) & \multicolumn{8}{c|}{84.10} \\ \hline
+	\end{tabular}
+	\caption{Run 1}
+	\label{table:run1}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+	\hline
+	\multirow{3}{*}{concatenated packet} & 142 & 139 & 135 & 122 & 120 & 93 & 91 & 75 \\
+	& 98 & 110 & 98 & 122 & 97 & 91 & 79 & \\
+	& & & & & & & 76 & \\ \hline
+	new packet size & 240 & 249 & 233 & 244 & 217 & 184 & 246 & 75 \\ \hline
+	filling	(\%) & 96.00 & 99.60 & 93.20 & 97.60 & 86.80 & 73.60 & 98.40 & 30.00 \\ \hline
+	average filling	(\%) & \multicolumn{8}{c|}{84.40} \\ \hline
+	\end{tabular}
+	\caption{Run 2}
+	\label{table:run2}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+	\hline
+	\multirow{2}{*}{concatenated packet} & 148 & 146 & 141 & 140 & 135 & 126 & 96 & 89 \\
+	& 101 & 97 & 105 & 109 & 113 & 104 & 95 & 82\\ \hline
+	new packet size & 249 & 243 & 246 & 249 & 248 & 230 & 191 & 171 \\ \hline
+	filling	(\%) & 99.60 & 97.20 & 98.40 & 99.60 & 99.20 & 92.00 & 76.40 & 68.40 \\ \hline
+	average filling	(\%) & \multicolumn{8}{c|}{91.35} \\ \hline
+	\end{tabular}
+	\caption{Run 3}
+	\label{table:run3}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+	\hline
+	\multirow{2}{*}{concatenated packet} & 149 & 142 & 141 & 138 & 130 & 129 & 126 & 91 \\
+	& 97 & 107 & 95 & 111 & 117 & 120 & 111 & 77 \\ \hline
+	new packet size & 246 & 249 & 236 & 249 & 247 & 249 & 237 & 168 \\ \hline
+	filling	(\%) & 98.40 & 99.60 & 94.40 & 99.60 & 98.80 & 99.60 & 94.80 & 67.20 \\ \hline
+	average filling	(\%) & \multicolumn{8}{c|}{94.05} \\ \hline
+	\end{tabular}
+	\caption{Run 4}
+	\label{table:run4}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|l||c|c|c|c|c|c|c|c|}
+	\hline
+	\multirow{2}{*}{concatenated packet} & 146 & 145 & 139 & 135 & 135 & 134 & 128 & 124 \\
+	& 94 & 104 & 92 & 111 & 90 & 87 & 120 & 116 \\ \hline
+	new packet size & 240 & 249 & 231 & 24 & 225 & 221 & 248 & 240 \\ \hline
+	filling	(\%) & 96.00 & 99.60 & 92.40 & 98.40 & 90.00 & 88.40 & 99.20 & 96.00 \\ \hline
+	average filling	(\%) & \multicolumn{8}{c|}{95.00} \\ \hline
+	\end{tabular}
+	\caption{Run 5}
+	\label{table:run5}
+\end{table}
+
+It is interesting to see that the overall filling is often far over 80\%, which supports the idea of getting a good result.\\
+A closer look to the individual filling leads to a different conclusion. While the first packets are often filled up close to the optimum ($ > 96.00\%$) the last concatenations can be quite bad. This can be explained by the number of packets available for concatenation. It seems obvious that the more packets are available, the more choices the algorithm can make and therefore a better solution can be found. However, this doesn't necessarily mean that with less packets only bad fillings can be produced, but it is more likely. This has a direct influence on the real network. While packets are queued in a device they will not be forwarded towards the concentrator, thus leading to a longer data collection time. The advantages and drawbacks must be weighted towards a case-specific optimal objective. On the other hand the number of packets which can be stored is limited by the amount of available memory, which is relatively small. From that it can easily be seen that this trade-off (data collection time, number of stored packets) that affects the performance of the algorithm is in a great extent dependant on  the existing hardware and its limitations.
+
+% bin packing problem
+% - algorithmus
+% - tests
+% - ergebnisse
+
+% results

@@ -1,0 +1,219 @@
+\chapter{Simulation}
+\label{sec:simulation_results}
+
+\textit{In this chapter, the specific part of the simulation of this project will be presented. The following sections will go through the setup phase as well as the operating phase. The process of setting up the components and all the necessary variables for the simulation comprise the setup phase. The simulation was set up for both the Fast Data Collection and Kamstrup 's sequential data collection.}
+
+\section{Preparing the Simulation}
+It became apparent from the beginning of the project that the two approaches that are handled would be diverse. For that reason, throughout the design of the simulation it was argued that according to the abstraction that was made, the application had to be easily implementable inside the specified given time-frame. This led to the obvious conclusion that the simulation should have both a common basis for the two approaches, but also establish unambiguous boundaries between them. Inductively, a decision was reached to differentiate the modules based on the approach they implement since the two approaches are diverse on their implementations.\\
+Every node consists of the two following basic components:
+%Throughout the implementation phase of the simulation we argued about keeping close to the abstraction that was made while having an easily implementable framework inside our given time-frame. This decision led to an implementation where modifications in only two components were necessary to fulfil the aforementioned demand. The objective was to make the minimum amount of modifications while at the same time being able to reflect the differences between the two approaches satisfactorily. 
+
+\begin{itemize}
+\item The application layer
+\item The network interface layer
+\end{itemize}
+
+The application layers for all the distinct modules are implemented differently as in both approaches the data collection is performed in totally different ways. Adding to that, the tasks that the nodes have in both approaches are not the same. The Kamstrup approach rises as a more centralised approach whereas in Fast Data Collection, routing nodes hold more responsibilities during the data aggregation process.\\
+The network interface layers, on the other hand, have the same base. This base is used as is for all the nodes that do not have Collision Avoidance in both approaches. In Fast Data Collection, nodes with Collision Avoidance are realized by implementing additional functionalities on top of that base.
+
+\subsection{The Application Layer}
+Going into more detail about the application layer, one sees fairly easily that the implementation is far more complex in the Fast Data Collection approach, where there are nodes that must perform tasks of increased complexity compared to the Kamstrup case. This is due to the introduction of routing concepts; in the Fast Data Collection approach, the concentrator is only responsible for the initial request broadcast, passing the task of reliable data aggregation to its children. On the other hand, in Kamstrup's approach the concentrator is the initiator of every single communication that is happening in the network and that is reflected in the way the application layer is implemented to be used in the simulation.\\
+Moreover, looking into the application layers of the rest of the modules one could see that the basic "centralised vs. decentralised" approach still holds and affects the implementation of the application layers. Let's take for example the Routing Meter category; this type of node has to send its own data to the concentrator but also act as an intermediate routing node for all its children. The only difference from the Router category is that the Router does not have data of its own to send and only has to handle the data of its children. Adding to that, since data concatenation is implemented in the Fast Data Collection approach, the Routers and Routing Meters existing in the network have a function responsible for performing this procedure according to the algorithm previously described in the In-network data aggregation section \ref{sec:data_aggregation}.
+The Meter modules, that represent the smart meters with no routing capability in both approaches, are very simplistic in their implementation in both cases as their only task is to provide their measurements when requested.\\
+Lastly, the packet sizes are created following the uniform distribution during the setup phase of the network. Packet sizes are chosen within the range of 75 to 150 bytes and it is assured that the same packets will be assigned to each node during the simulations of both approaches.
+
+\subsection{The Network Interface}
+Concerning the network interface in both approaches, there is one significant difference to point to. In the Fast Data Collection approach a simple form of collision avoidance is implemented to support the routing performed in this approach. On the contrary, in the Kamstrup approach, since the data collection is sequential and initiated each time by the concentrator a more complex implementation of the network interface than the already existing one is not needed. Based on this, all the modules of both scenarios implement the same network interface card module (NIC), that is the Omnet++ module responsible for the channel control. The differentiation happens in the NIC itself where two interchangeable methods exist, one that supports collision avoidance by checking if the channel is free before sending a frame, and one that is unaware of the occurring transmission and just propagates a frame.\\
+Parameters associated and assigned to every NIC:
+
+\begin{itemize}
+\item Maximum propagation distance 350 meters
+\item Back off time 0.5 seconds
+\item Datarate 1488 bits per second
+\end{itemize}
+
+As described in section \ref{sec:channel} which analyses how the channel is implemented, the maximum propagation distance is part of the calculations to derive the maximum time a frame is occupying the channel. This specific distance was chosen based on the specifications provided by Kamstrup for a node without an external antenna.\\
+When a node with collision avoidance senses one of its neighbours transmitting over the channel, waits for a time equal to this back off before trying to send again. Its magnitude was chosen to be comparable to the transmission time of an average packet size, but not so small that would cause too frequent and unnecessary checks on the channel.\\
+The datarate was set to 1488 bps for all the nodes. This is the lowest datarate supported by Kamstrup's network components.	
+
+\subsection{Imported Data}
+In order to create a simulation that more closely represents the actual network, Kamstrup provided data that correspond to specific, implemented networks of theirs. Among these, were included data about the geographical location of the nodes as well as data about the type of nodes existing in the network along with their specific significant values e.g. SNR. All the data is utilized towards building a more accurate simulation model to reinforce and support the obtained results. \\
+More specifically, the nodes that comprise the network are placed in the "playground" of the simulation based on the real coordinates provided by Kamstrup. That way one can see that the nodes follow the city plan. This also allows us to create a more realistic channel, but this will be explained more into detail later on. Moreover, it should be clarified that the data provided by Kamstrup define neighbouring nodes based on SNR values and this is the information utilized to derive the node connectivity in the implementation of the simulation.\\
+The data provided by Kamstrup are manipulated in such way that form an adjacency matrix for the nodes based solely on SNR values; however in the Fast Data Collection, a cost function is constructed for that purpose as previously mentioned in section \ref{sec:spanning_tree}. At this point it should be pointed out that for the Kamstrup case a tree was generated with the same algorithm that is utilized in the Fast Data Collection using the same cost function as well. Meaning, in practice, that the comparison will be performed using the same routes. \\
+Moreover, the imported data were used in order to have an accurate representation of the population of the nodes in the part of the network that was chosen as a study case. This means that the number of Concentrators, Routers, Routing Meters and Meters is based on the actual data and was not arbitrarily set. This in turn makes our results more robust. Specifically this simulation is focused on one concentrator and all the nodes within a radius around it as shown in figure \ref{fig:concentrator10053}\\
+Below, in figure \ref{fig:Fast_Data_Collection_sample} a screen capture that illustrates certain aspects of how the imported data affect the simulation is presented. The thing that becomes clear from the beginning is the use of real coordinates for the placement of the nodes. The information on the coordinates were drawn based on the files described in section \ref{sec:data_description}.
+
+\figur{0.7}{Fast_Data_Collection_sample}{Example of the simulation layout in Omnet++}{fig:Fast_Data_Collection_sample}
+
+\subsection{Channel Implementation}
+The component that is used to model the channel in the simulation was implemented in such a way as to incorporate functionalities that support the routing approach followed in the Fast Data Collection. However it was done in a manner that allows for the same channel module to be utilised in both the approaches without compromising their performance and the way they operate. To state this more clearly, the channel is designed to accommodate both the functionalities of a basic collision avoidance scheme and the generic transmission mechanism used by all the nodes.
+
+Analysing further, the channel is the component that is aware of all the nodes, their connectivity relation and keeps track of every ongoing transmission in the entirety of the network (see section \ref{sec:channel}). Every node informs the channel of its transmission. In the case of Collision Avoidance enabled nodes, they access functionalities provided by the channel to check if it is occupied.\\
+The most significant role of the channel is that it calculates all the delays for every frame transmission. These are:
+
+\begin{itemize}
+\item Packet delivery time
+	\begin{itemize}
+	\item Packet transmission time
+	\item Transmitter to receiver propagation time
+	\end{itemize}
+\item Maximum time a packet occupies the channel
+	\begin{itemize}
+	\item Packet transmission time
+	\item Maximum Propagation time (based on maximum propagation distance)
+	\end{itemize}
+\end{itemize}
+
+The packet delivery time is used to measure how long it takes for the whole packet to reach the receiver, whereas the maximum time a packet occupies the channel defines the amount of time the transmission is active and potentially act as noise to neighbouring nodes. The difference between the two is based on their scope and lies on the distance used to calculate the propagation time. For the former, the distance between the transmitting and the receiving node is used; for the latter, the maximum distance that a node can propagate is used. The propagation speed used is $3*10^8$ meters per second, which is an approximation of the speed that the light propagates in the air.
+
+% The backoff is part of the nic, not the channel
+%Analysing the approach used in the Fast Data Collection, we implement a backoff mechanism that introduces delay to the network in case the channel is occupied when we try to send a message. Delay is also introduced in the transmission itself as the time it takes to propagate to its destination. The transmission delay is computed based on the distance between sender and receiver. Since we allow multiple transmissions in the network, the backoff mechanism is an effort to minimize the amount of collisions happening. This however, as mentioned before, is not implemented in the Kamstrup case due to the approach followed (sequential) for the data collection. There, the channel only allows one transmission at any given time, thus eliminating the risk of collisions but drastically degrading the performance of the network.
+
+For the Fast Data Collection approach, a retransmission mechanism was conceptualized in the design of the system in order to enhance reliability of the network and increase the accuracy of our results by introducing additional delays. Ultimately this mechanism was not implemented in the simulation. The simulation works under the assumption that the transmission between routing nodes and simple meters are always reliable, but this is considered for the interpretation of the results.
+
+\section{Results}
+Running the simulation with these specifications produced certain results, regarding all the metrics considered in the performance metrics section \ref{sec:performance_metrics}. Interpreting the extracted results led to conclusions answering the initial question as formed in the problem formulation section \ref{sec:problemformulation}.\\
+In this Result section, findings from both simulations, based on the extracted data, will be presented. This will mainly be done through graphs so the reader can visually understand the difference of the two approaches. This also allows for direct comparison of the two approaches and facilitates the quantification of improvement or deterioration of the performance between the two approaches. The performance can be thought of as a generic measure but also as the deviation of a specific metric. Finally, the exported results will be interpreted and utilized to draw conclusions and attribute them to their originating cause.\\
+The extracted results and that are going to be compared are as follows:
+
+\begin{itemize}
+\item Data collection time
+\item Power consumption
+\item Packet filling
+\item Number of transmissions
+\item Average throughput
+\end{itemize}
+
+At this point it is important to mention, once again, that in both simulation models the same tree (routing paths) is used, as well as, the same packet sizes for each meter in order to evaluate the two approaches under the same conditions. Moreover, the simulation is run for one data collection round each time. This means that the sub-cost of the cost function defined by the amount of transmissions does not affect the minimum spanning tree.
+
+\subsection{Data Collection Time}
+As explained in the performance metrics (see section \ref{sec:performance_metrics}), data collection time is the main focus of this project. The Fast Data Collection approach was designed as to minimize this time but also keep the trade-off over all the other significant system metrics within an acceptable range. In regard to that metric, the Fast Data Collection achieved its set goal and reduced this time in comparison to Kamstrup's case. This is also in agreement with the upper bounds set in our analytical model concerning the data collection time in both approaches. The upper bounds, in this case, correspond to the maximum data collection time of the worst case scenarios as described in the Analytical Bounds section (see chapter \ref{sec:analytical_bounds})
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+    & Kamstrup & Fast Data Collection \\ \hline
+    Upper Bound & 164430 s & 812 s \\ \hline
+    Data Collection Time & 955.84 s & 276.09 s \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Comparison of Analytical bounds and Simulation values for the Data Collection Time}
+\label{tab:data_collection_time}
+\end{table}
+
+%The resulting data collection time in Kamstrup's approach is much larger than the Fast Data Collection since the data collection remains sequential. It is also expected for the Kamstrup case to be well below the analytical upper bound as we use both the minimum spanning tree algorithm to generate the routes as well as the cost function, taking into account both SNR and distance.
+The Fast Data Collection will reduces the data collection time by approximately 71\% compared to Kamstrup's approach, as seen in the table \ref{tab:data_collection_time}. The routes in both approaches are chosen based on the same minimum spanning tree. Based on this fact, the interpretation of the such an increase at the performance is left to the two other design choices. Namely, allowing simultaneous transmissions through collision avoidance and packet concatenation. In addition to these techniques, such performance was achieved due to delimitations such as no collisions occurring in the case of hidden nodes transmitting (see section \ref{sec:reliable_communication}). The data collection time is assumed to be greater in a model that implements retransmissions for collisions and addresses the hidden node problem.
+
+\figur{0.7}{Percentage_packets_arrived}{Percentage of packets arrived at the concentrator for both approaches}{fig:Percentage_packets_arrived}
+
+The above graph illustrates the cumulative data packet arrival at the concentrator for the two approaches. It is observed from their trend, that Kamstrup's approach is more linear where Fast Data Collection looks like a CDF of an exponentially distributed function. This interprets to steady flow of packets in Kamstrup's approach in the whole duration of the simulation. On the other hand, in the Fast Data Collection, the packet flow is more dense at the beginning of the simulation and becomes sparser when the simulation approaches its end and most of the packets have already been sent. To quantify the trends to a high percentage of completion, it can be seen that to hit the 90\% mark, it takes approximately 200 seconds for the Fast Data Collection approach whereas in Kamstrup's approach the same percent is achieved at approximately 840 seconds. With more analysis on the Fast Data Collection case it is seen that at the end of the simulation 27.5\% of the data collection time is spent to collect the last 10\% of the packets, which means that close to the end of the round the data packet arrival rate is smaller.
+
+\subsection{Power Consumption}
+A secondary objective, as mentioned in section \ref{sec:problemformulation}, was to keep the power consumption of the network within an acceptable range of values, while making the effort to minimize the data collection time. In the delimitation section \ref{sec:delimitations} it is mentioned that no computational costs are not taken into consideration, leaving only the transmission time to affect the lifetime of a node. Following that, it is clear that the lesser the bits transmitted in the network, the better the power consumption and inductively the lifetime of it. On the following table \ref{tab:power_consumption} are shown the results obtained after the evaluation of the two approaches concerning the total amount of bits transmitted during a data collection round. For the simulation, an overhead of 23 Bytes and a request sizes of 10 Bytes are considered.
+% Specifying to our implementation, the total overhead produced is one of the factors that affect the power consumption of the network. This is done in a rather simple way by adding a static value, which corresponds to the overhead of the packets, and studying its impact on the cumulative data.
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    Kamstrup & Fast Data Collection \\ \hline
+     2,085,224 bits & 1,773,848 bits \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Comparison of the power consumption of the network as a factor of transmitted bits}
+\label{tab:power_consumption}
+\end{table}
+
+The exported information from the above table \ref{tab:power_consumption} is that the power consumption for transmissions in the Kamstrup's approach is 18\% times greater than in the Fast Data Collection. This improvement can be attributed to the concatenation mechanism as it tries to take full advantage of the maximum available packet size to minimize the transmissions and maximize the throughput of the network. The benefit of the concatenation technique is that for every additional packet that gets concatenated, the gain is to not transmit the additional overhead.\\
+Adding to that, the broadcast scheme that is introduced in order to propagate the request message to all the nodes in the network drastically reduces the amount of transmissions needed to cover an area (see table \ref{tab:packet_amount}). The concentrator reduces the requests down to one transmission and the routing nodes with meter children reduce down to the number of their children. Last, the amount of responses is also reduced by 19.6\% due to the concatenations performed in Fast Data Aggregation.
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    & Request & Response & Total \\ \hline
+    Kamstrup & 1535 & 1535 & 3070 \\ \hline
+    Fast Data Collection & 404 & 1233 & 1637 \\ \hline
+    Decreased by & 73.68\% & 19.67\% & 46.67\% \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Amount of request and response packets for both approaches}
+\label{tab:packet_amount}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    & Request & Response & Total \\ \hline
+    Kamstrup & 50\% & 50\% & 100\% \\ \hline
+    Fast Data Collection & 25.75\% & 74.25\% & 100\% \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Ratio of request and response packets for both approaches}
+\label{tab:packet_ratio}
+\end{table}
+
+\subsection{Packet filling}
+
+The figure shown bellow \ref{fig:Transmitted_distribution} illustrates the distribution of sent packets. The packet sizes each node emits are static throughout the simulation and were created following the uniform distribution. However, the distribution that is shown is not uniform since the same packet is sent and thus counted over multiple hops. In Kamstrup's case where the data collection is sequential the number of packets of different sizes is affected by the depth of the node in the tree (nr. of hops it has to follow) and the packet size that each node initially generated.
+
+\figur{0.9}{Transmitted_distribution}{Distribution of sent packet sizes in both approaches. These packets include only responses, not broadcasts and requests.}{fig:Transmitted_distribution}
+
+On the other hand, in the Fast Data Collection approach, since a concatenation technique was introduced, it was achieved a decrease of the amount of sent packets in the range of 75 to 150 bytes and produce larger sizes. The percentage of the concatenation (filling of the concatenated packet) often goes up to 80-90\%, which corresponds to 200-225/250 bytes of the available bytes in the maximum packet size. The depth of the node in the tree and the size of packet that it generates, despite being the same as in Kamstrup, still affect the concatenation and ultimately the data collection procedure. It is a significant amount of packets, and with a good filling rate, that this mechanism manages to concatenate.
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    & Mean packet size & Average filling & Maximum filling \\ \hline
+    Kamstrup & 114 bits & 45.56\% & 59.6\% \\ \hline
+    Fast Data Collection & 146 bits & 58.41\% & 99.6\% \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Packet filling achieved on sent packets with (Fast Data Collection) and without (Kamstrup) concatenation}
+\label{tab:packet_filling}
+\end{table}
+
+\subsection{Number of Transmissions}
+Another metric that is used mostly to visualize the behaviour of the two protocols rather than measure and compare their performance is the number of transmissions over time. In the figures \ref{fig:Transmissions_Sequential}  below, it is seen that in Kamstrup's case the average number of transmissions remains at a steady level throughout the simulation. This is explained by the sequential approach followed by this protocol where only one transmission is allowed at each time throughout the network. The fluctuation is attributed to the different transmission and propagation delays.\\
+On the other hand, in the Fast Data Collection approach (figure \ref{fig:Transmissions_Fast}) there is initially a high number of transmissions which decays exponentially until the end of the simulation. This is in perfect agreement with the expected behaviour of the Fast Data Collection. This is attributed to the multiple transmissions that occur simultaneously throughout the network after the initial broadcast request. This behaviour is strengthened by the specific implementation of the data collection mechanism that prioritizes nodes that are higher up in the tree (a node transmits its own data before requesting from the rest of its children).
+
+The sequence of events on the routing meters when they receive the initial broadcast from the concentrator has the greatest contribution to the big amount transmissions at the beginning of the data collection round. The first thing to do is to spread the broadcast in order to inform the lower level branches of the tree as fast as possible. Next, the routing meter sends its own data so that it will not lose time waiting to receive responses from its children. The last thing to do is to request and receive data from its children which are leaves on the tree and simultaneously receive data packets from children which are branches. The received data packets are then put in a queue where a combination of them is chosen to form a new concatenated packet.\\
+The way the queue operates is also responsible for the exponential decay. It incorporates the following two different operating modes:
+
+\begin{itemize}
+\item Flush while concatenating packets after a specific time
+\item Perform a concatenation and send when the queue is full
+\end{itemize}
+In the beginning of the data collection round, all the children send their data upwards, resulting in filled up queues. As the simulation advances, the queues don't have enough data to fill them hence they wait until a specific time-out. This time-out is the cause for an additional delay and consequently less transmissions per second.
+
+
+\figur{0.7}{Transmissions_Sequential}{Number of Transmission over time for Kamstrup's Approach}{fig:Transmissions_Sequential}
+\figur{0.7}{Transmissions_Fast}{Number of Transmission over time for the Fast Data Collection Approach}{fig:Transmissions_Fast}
+
+\subsection{Average throughput}
+The last metric measured and examined is the average throughput. In this network it was thought as meaningful to measure the throughput on the side of the concentrator. This is based on the facts that all the meters, router, routing meters and the concentrator have the same datarate through one common channel while at the same time, all the meters try to forward their data towards the concentrator. This combination results in the link between the concentrator and its first child nodes to constitute a bottleneck for the whole system. This means that this specific link sets the lower bound to the data collection time for a specific amount of data.
+
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | }
+    \hline
+    & Kamstrup & Fast Data Collection \\ \hline
+    Average Throughput & 377 bps & 1315 bps \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Average throughput measured at the concentrator}
+\label{tab:average_throuput}
+\end{table}
+
+A dramatic increase of the average throughput is observed on the side of the concentrator when using the Fast Data Collection approach. This means that there are almost no gaps in between the concentrator's receptions. Another reason for this seemingly great performance is that simultaneous transmissions may occur and received which are practically collisions that should trigger retransmissions. The nodes that are subject to the hidden node problem, as described in section \ref{sec:reliable_communication}, as well as meters that do not implement collision avoidance are not aware of the transmissions on the receiver. Due to that the aforementioned nodes start sending, causing simultaneous transmissions in the same area (collisions).
+
+\section{Conclusion}
+In this chapter, the findings and the results exported from the implemented simulation, were presented. Firstly, a comprehensive presentation of the simulation elements was done so the reader can familiarize with the components that differentiate the two examined approaches. The chapter also referred to the data provided by Kamstrup up to the extent that they are used in and affect the simulation. The channel implementation was also mentioned since it is one of the key differences in comparison to the approach of Kamstrup. Lastly, the results derived from the implemented simulation were presented, both in text explaining their feasibility but also through graphs so the reader can get a better grasp of the difference between the two approaches in regard to the different metrics (see section \ref{sec:performance_metrics}). The results were argued on and they were compared with the original expectation as well as with the abstraction that the simulation was based on to see if there is agreement.
+In the following, concluding, section of the report the final outcome of this project will be presented.
+
+
+

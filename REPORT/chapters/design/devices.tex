@@ -1,0 +1,55 @@
+\section{Devices}
+\label{sec:devices}
+
+This section will summarise the roles and functionalities required by the devices in Kamstrup's sequential data collection and the designed Fast Data Collection approach. Figures \ref{fig:devices-kamstrup} and \ref{fig:devices-aau} show how the two approaches differ in functionality for the different devices. The figures also show the design of a two-layered structure including an application layer and NIC (network interface card) layer. This is in order to create a NIC layer that can be used generically for all devices, and allow for a device's functionality to be represented using the application layer.
+
+\subsection{Kamstrup's sequential data collection}
+
+The section will describe the functionality in the different devices in Kamstrup's sequential data collection. Figure \ref{fig:devices-kamstrup} describes the functionality of the different devices, using an application and a NIC layer. Figure \ref{fig:sequence_aau} shows a sequence diagram, describing the messages transmitted during a data collection round. The individual devices are described in the following.
+
+\figur{0.8}{devices-kamstrup}{Comparison of the capabilities of the different devices using Kamstrup's sequential data collection}{fig:devices-kamstrup}
+
+\figur{1}{sequence_kamstrup}{Sequence diagram of the messages in Kamstrup' sequential data collection}{fig:sequence_kamstrup}
+
+\subsubsection{Concentrator}
+
+The concentrator will use a database of routes to send requests to each individual meter. It waits until a response is received from that meter before sending the next request. The data collection round ends when responses are received from all meters.
+ 
+\subsubsection{Router}
+
+The routers task is to forward all requests and responses to the next hop in the route.
+
+\subsubsection{Meter}
+
+A meter generates a measurement when a request is received. It will then respond using the same route through which the request travelled.
+
+\subsubsection{Routing meter}
+
+A routing meter forwards all requests and responses for which it is not the destination. If it is the destination of a request it will generate a measurement and send it using the same route through which the request travelled.
+
+\subsection{Fast Data Collection}
+Moreover, the functionality in the different devices in the Fast Data Collection approach will be described. Figure \ref{fig:devices-aau} describes the functionality of the different devices, using an application and a NIC layer. Figure \ref{fig:sequence_aau} shows a sequence diagram, describing the messages transmitted during a data collection round. The individual devices are described in the following.
+
+\figur{0.8}{devices-aau}{Comparison of the capabilities of the different devices using the fast data collection approach.}{fig:devices-aau}
+
+\figur{1}{sequence_aau}{Sequence diagram of the messages in the fast data collection approach.}{fig:sequence_aau}
+
+\subsubsection{Concentrator}
+
+The concentrator will first, in the setup phase, generate a tree structure using the cost designed in section \ref{sec:spanning_tree}. The parent and meter children information are then sent to devices capable of routing. This concludes the setup phase.\\
+The operating phase is initialised with a broadcast request. When measurements from all meters have been received, the data collection round is concluded. A choice of whether a new round should be started immediately, wait for the next data collection interval or change to setup phase is then performed. The concentrator implements collision avoidance.
+
+ 
+\subsubsection{Router}
+
+The routers task is to forward measurements. When a broadcast request is received, it is rebroadcasted. If the router has any meter children, they are sequentially requested. A concatenation is performed when a sufficient number of measurements have been received, according to the design in section \ref{sec:data_aggregation}, and then sent to its parent. The router implements collision avoidance.
+
+
+\subsubsection{Meter}
+
+Meters are very simple. They respond to sequential requests from their parents (nodes that implement routing). A meter does \textbf{not implement} collision avoidance.
+
+
+\subsubsection{Routing meter}
+
+A routing meter performs the roles of both the router and the meter. It will re-broadcast requests, generate and send its own measurement to its parent, sequentially collect measurement from its meter children and concatenate measurements when a sufficient number of measurements have been received. The routing meter implements collision avoidance.

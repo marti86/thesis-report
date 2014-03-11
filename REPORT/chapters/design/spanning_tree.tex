@@ -1,0 +1,102 @@
+\section{Spanning tree}
+\label{sec:spanning_tree}
+
+As the delimitation in chapter \ref{sec:delimitations} described, a spanning tree must be constructed using Kamstrup's information of the network. To do this a spanning tree algorithm must be chosen. The main task that the spanning tree algorithm should solve, is to do a network wide cost optimization. The optimization goal is to achieve a good signal quality, small number of transmissions and balancing the energy usage of the individual nodes in the network. To solve this problem, minimum spanning tree (MST) algorithms are a good solution, as they try to minimize the costs of the whole tree given a network $G=(V,E,\omega)$. The resulting tree should then achieve an overall good signal quality with the low number of transmissions and a good energy balancing. Since this tree will be used for routing, only devices which are capable of doing routing are considered in the tree construction process. All other nodes, in this case only simple meters, are added to the tree as leafs afterwards. This will protect the algorithm from creating a tree with meters between routing, devices which would obviously lead to an invalid tree. To find such a tree one of the following two basic algorithms can be used:
+\begin{itemize}
+\item The \textbf{Prim's algorithm} finds a minimum spanning tree $T=(V,E_T)$ of a given network $G=(V,E,\omega)$. The basic idea is to start with an empty tree and add a root vertex. A minimum priority queue stores the nodes which are not in the tree yet. The priorities are given by the cost to connect the node the tree. While the queue contains nodes take the one with the lowest cost, add it to the tree and remove it from the queue. As long as the graph has no unconnected nodes the resulting tree will be a minimum spanning tree for the given network.
+\item Another approach is used by the \textbf{Kruskal's algorithm}. It defines a forest of trees and tries to connect these trees to a single minimum spanning tree. To do so one edge at a time will be added, which means that 2 trees will be merged. This will be repeated until the number of separated trees reaches $1$. One restriction is that edges can only be added when they connect to another tree, meaning that an edge to a sibling cannot be chosen.
+\end{itemize}
+Both algorithms produce a minimum spanning tree. The output of these trees is a table showing nodes, each with one parent. Prim's algorithm seems to be more intuitive for the given network, as it starts at a root vertex and adds one node (node is another word for vertex and might be used interchangeably) at a time to the existing tree. This directly relates to the thought of having a concentrator and adding edges to its tree at each iteration to encompass more of the network. Prim's algorithm was initially preferred as it would allow the cost function to minimise the maximum hop count, because it adds to an existing tree. Kruskal does not do this, but instead combines different trees, allowing very long routes to be created. The constraint of 10 hops was investigated further and concluded that it was not a constraint for the tree used for data collection and is only a constraint for the routes used for the proposed setup phase in the delimitation. So as both algorithms can solve the problems it is chosen to stick with Prim's algorithm.
+
+\subsection{Prim's algorithm}
+\label{sec:prim}
+This section covers the generation of a minimum spanning tree by Prim's algorithm in more detail. Prim's algorithm is seen in algorithm \ref{algo:pseudocode_prim} and figure \ref{fig:prim}. The way the algorithm works will be explained in detail hereafter.\\
+%G: Graph
+%VG: Knotenmenge von G
+%w: Gewichtsfunktion für Kantenlänge
+%r: Startknoten (r ∈ VG)
+%Q: Prioritätswarteschlange
+%π[u]: Elternknoten von Knoten u im Spannbaum
+%Adj[u]: Adjazenzliste von u (alle Nachbarknoten)
+%wert[u]: Abstand von u zum entstehenden Spannbaum
+%
+%algorithmus_von_prim(G,w,r)
+%01  Q \leftarrow VG   //Initialisierung
+%02  für alle u ∈ Q
+%03      wert[u] \leftarrow ∞
+%04      π[u] \leftarrow 0
+%05  wert[r] \leftarrow 0
+%06  solange Q ≠ \varnothing
+%07      u \leftarrow extract_min(Q)
+%08      für alle v ∈ Adj[u]
+%09          wenn v ∈ Q und w(u,v) < wert[v]
+%10              dann π[v] \leftarrow u
+%11                  wert[v] \leftarrow w(u,v)
+
+\begin{algorithm}
+\KwData{G: Graph, $\omega$: weights, r: root node}
+\KwResult{$\pi$: table of parents}
+Q $\leftarrow$ V\;
+\ForEach{u $\in$ Q}{
+	value[u] $\leftarrow \infty$\;
+	$\pi$[u] $\leftarrow 0$\;
+}
+value[r] $\leftarrow$ 0\;
+\While{Q $\neq \varnothing$}{
+	u $\leftarrow$ extract\_min(Q)\;
+	\ForEach{v $\in$ $N_u$}{
+		\If{v $\in$ Q $\wedge$ w(u,v) < value[v]}{
+			$\pi$[v] $\leftarrow$ u\;
+			value[v] $\leftarrow$ w(u,v)\;
+		}
+		
+	}
+}
+\caption{Algorithm of Prim}
+\label{algo:pseudocode_prim}
+\end{algorithm}
+
+\figur{0.8}{Prim's_algorithm}{An example of Prim's algorithm \citep{prim}.}{fig:prim}
+
+The algorithm firstly creates Q and filled with all the nodes of the graph. For every node the parents ($\pi$) is set to zero and value is set to $\infty$, meaning the distance to created graph is maximum, because they are treated as they have no connection to the tree. Additionally the value of r is set to zero because the root can be seen as the initial tree and has no distance to it. $\pi$ can be left untouched this will leave 0 as a parent for r. This is ok as long as there is no other node with the name ``0''.\\
+The following while-loop will iterate over the set of nodes until this set is empty. In other words it will iterate over this set as long as not all nodes are connected to the tree. extract\_min(Q) will deliver the node with the smallest distance to the tree depending on the weights $\omega$. This function also removes the element from Q. In the first run this will be the root node r. This one is actually  not the most interesting one, but its neighbours ($N_u$) are. For each of these nodes it is checked if it is still in Q. If not, meaning that the node is already in the tree, it will be continued with the next neighbour, but if it is still in Q then it needs to be checked if it is the node with the smallest distance to the tree ($w(u,v) < $value$[v]$). It can happen that this condition can be entered several times while iterating over neighbour nodes. This is ok since every time the condition is triggered a bad value will be updated (an example: in the beginning value = $\infty$ for all nodes except r. The first time the condition is triggered for a node the value and its parent will be set, meaning thy are inserted into the tree. If the condition holds another time, meaning that a ``better'' parent had been found, the value and parent will be set to the new values. This can happen multiple times; Each time a ``better'' parent will be chosen). Within the condition the table of parents ($\pi[v] \leftarrow u$) and the distance to the tree (value[v] $\leftarrow$ w(u,v)) will be updated.\\
+The table of parents can be read as $\pi[v] = u$ meaning that the parent of v is u. The only node where $\pi$ is not accurate is for the root since this node has no parent 0 is stored there.
+
+The complexity of the algorithm depends on multiply factors but at least on the initialization part (the part in the beginning before entering the while-loop) and the working part (the while-loop). A closer look into the working part presents a function called extract\_min(Q). Since the complexity is also dependent on this method it must be shown how it will work. However, in this pseudo code  Q, V, E, $\text{N}_\text{u}$ are just sets where the algorithm is working on. In an implementation of the algorithm a data structure is used to represents a set, which leads to the conclusion that extract\_min(Q) is dependent on the actual representation of the sets. Possible representations for a set is a growing data structure like a list or a tree. The disadvantage of these is that it can take quite long to find the minimum value. It would be better to use a priority queue  implemented on a heap, since this data structure is always ordered and holds the value with the highest priority in the first place. In this specific algorithm it must be considered that a high priority is given when a value is very low, so the priority queue must be changed in a way to keep the value with the lowest value in the first place. On the other hand this can be established by using the values implicitly through the function $f(x) = -x$, which will generate a high priority for a low value. It just must be kept in mind that the values must be re transformed with the inverse function $f^{-1}(x) = -x$ to retrieve the original value. Since the time used for the transformation of values is constant in terms of the $\mathcal{O}$--notation it does not matter which procedure to choose. Since in a practical application it requires less steps to order the queue in reverse then performing a transformation of data the ordering approach is preferred. This also prevents mistakes which can occur when one forgets to re transform the data.
+
+Assuming that the set Q is implemented as a priority queue the time complexity can be written as $\mathcal{O}(|E|\cdot\log{(|V|)})$. However this upper bound can be lowered by using another data structure. Since the main focus of the project is not about optimizing the setup phase, this basic implementation will be used.
+
+%One problem with the tree generation is that it can break the constraint of ten hops set in the beginning of the project. To avoid this the cost function can be modified in a way that the resulting tree stays within that constraint. Another way to obtain a suitable tree would be to use an algorithm which is capable of doing that. Since there is no such standard algorithm as Prim or Kruskal and these algorithms are not developed very well, it seemed not to be very practical to use in a real world scenario.
+\subsection{Cost function}
+\label{sec:cost_function}
+The cost function is designed to make a network wide optimisation of both the signal quality and number of transmissions and perform a balancing of the energy usage of the individual nodes in the network. In figure \ref{fig:cost_functions} the sub-cost functions are designed. These three sub-cost functions will each contribute to the total cost of using a link. The range of the costs that each sub-cost function can contribute with is between 0 and 100. The choices behind the different sub-cost functions are explained hereafter. The reason for the cost y-axis being inverted is because it is more intuitive to associate a rising function with something good or more wanted.
+
+\figur{1}{cost_functions}{The different sub-cost functions used for the main cost function.}{fig:cost_functions}
+
+A good signal quality is achieved by using Kamstrup's provided SNR values. The ideas behind using a good signal quality is to achieve fewer re-transmissions that could occur due to corrupted packets, and thereby a small data collection time. In the constraints it is defined that an SNR value of $18dB$ is required for a sufficient link quality. Therefore the sub-cost function for SNR will have maximum cost of 100 at the $18dB$ and decrease in cost until maximum $dB$ is achieved. This means that the maximum observed SNR value in the data will result in zero cost.
+
+The sub-cost function related to distances is related to achieving a fast data collection. In order to investigate the influence of distances to the data collection time the same network as described in data distribution in section \ref{sec:data_distribution}. The hypothesis is that by choosing a node that has short distance and add it to the spanning tree will increase the data collection time. The data collection time will increase for short distances due to a non-direct route being taken and therefore resulting in an increase in propagation delays. A case can also be considered where a too long distance is chosen, so it will require multiple hops before being able to reach its destination. Figure \ref{fig:short-long-route} shows a representation of how the total propagation distance is increased for the short and long distance case, while the medium distance case will have shorter propagation distances as it has more direct routes.
+
+\figur{0.4}{short-long-route}{Hypothesis on route choice for short, medium and long distances.}{fig:short-long-route}
+
+The sub-cost function related to distances is seen in figure \ref{fig:cost_functions} and is basically a step-function, where the step occurs at what will be called a distance parameter. Distances smaller than this distance parameter will have a high cost, while distances larger than the distance parameter will have no cost. The distance paramter has in part been chosen to be $80$, because it will result in a small data collection time, which is the goal of this project. The value has been found through performing the simulation for different values of the distance parameter as seen in figure \ref{fig:distance_parameter}. This relation shows a resemblance to that of a parabola, meaning that for a small and large distance parameter the data collection time will be high. The choice of a small distance directly relates to the hypothesis that for short distance a less direct route is taken, resulting in a higher data collection time. In the case of choosing a too high distance will result in choosing a edge that will require multiple hops before one is found that has a sufficiently high range to the final destination.
+
+% more direct route gives good data collection time:
+\figur{0.7}{distance_parameter}{Data collection time at different choices to the distance parameter.}{fig:distance_parameter}
+
+A minimisation is performed on figure \ref{fig:distance_parameter} to find the distance parameter that achieves the smallest data collection time. While finding a distance parameter, one must also consider its affect on the power consumption. Figure \ref{fig:distance_parameter_power} shows the relation between the distance parameter and the power consumption (number of transmitted bits). This shows a somewhat linear increase in power consumption for an increasing distance parameter, meaning that for an increasing distance parameter there is an increasing power consumption. The distance parameter of $80$ is chosen as it shows no big difference from the data collection time at $110$, while having a smaller power consumption.
+
+% power consumption
+\figur{0.7}{distance_parameter_power}{Power consumption compared to different choices to the distance parameter.}{fig:distance_parameter_power}
+
+A balancing in the power consumption of the individual nodes is performed by recalculating the spanning tree algorithm after a number of data collection rounds using the cost function, which is dependent on the number of transmissions each routing device has performed. While the contribution of the distance and SNR sub-costs will be static, the transmissions sub-cost will be changing for each data collection round. The main idea behind the transmissions is related to the state-of-the-art approach, PEDAP, which uses the remaining battery power to perform balancing. The remaining power is part of the cost by weighting the cost with a normalised remaining power. This is also performed in this design, but will use the number of transmissions performed instead of the remaining batter power, since this is a constraint. The sub-cost function is then constructed by the thought that for a increasing amount of transmissions there will be an increasing cost. The relation between the cost of an edge and the number of transmissions is seen in figure \ref{fig:transmissions}, where the cost is set according to direction of a response towards the concentrator. A normalised number of transmissions, which will have values between 0 and 1, is used to represent the sub-cost of transmissions in the total cost function.
+
+\figur{0.4}{transmissions}{Association of number of transmissions of a device and an edge.}{fig:transmissions}
+
+The total cost is seen in equation \ref{eq:total_cost}, where all three sub-costs are present. The sub-costs for SNR and distance are summed, while the normalised number of transmissions is divided by this summation. This designed cost function seeks to, as previously mentioned, achieve a fast data collection while achieving an overall good signal quality with the low number of transmissions and a good energy balancing.
+
+\begin{equation}
+C(i,j) = \frac{C_{SNR}(i,j)+C_{dist}(i,j)}{C_{trans}(i,j)/max\{transmissions\}},
+\label{eq:total_cost}
+\end{equation}
+where $i$ and $j$ represent the link going from $i$ to $j$, $C_{SNR}$ is the SNR sub-cost, $C_{dist}$ is the distance sub-cost and $C_{trans}(i,j)/max\{transmissions\}$ is the normalised sub-cost associated to the number of transmissions, taking values of the interval $]0;1]$.

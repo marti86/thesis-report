@@ -1,0 +1,59 @@
+\section{Reliable communication}
+\label{sec:reliable_communication}
+Reliability is defined as the ability of a certain system to steadily operate according to predefined specifications. The concept of reliability is a cornerstone in the design of a communication system. The objective is the guaranteed transmission of a message in relation to both data and connection integrity. Reliability is a generic concept for both wired and wireless communications, but of major importance. Especially in the latter where the medium is one (usually the air) and limited (to the frequency bands), reliability -along with the network planning and system design- will severely affect the overall system's performance. Reliability mechanisms are applied on different levels depending on the imperfections they try to suppress. These mechanisms usually want to:
+
+\begin{itemize}
+\item Deliver data without bit errors
+\item Provide link reliability
+\item Share the common medium (band) with no collisions
+\end{itemize}
+
+% Why is reliability relevant to our case?
+The relevance of reliability mechanisms to this project are investigated. After investigating more thoroughly, it is concluded that there is correlation to the project, which is based on the last two bullets and resides in two distinct factors. Firstly, the freedom these mechanisms provide when transmitting frames over the channel by acting as a level of abstraction. Secondly, the additional delays introduced as result of these mechanisms. This does not mean that the overall system's performance is going to be degraded due to these delays, but on a link basis (node to node) delays will be introduced to keep the channel clean while neighbouring nodes want to transmit their data.
+
+% Kamstrup approach
+Kamstrup's system is already there, up and running, meaning that the aforementioned challenges have already been confronted. The first problem of delivering the data packets without errors is solved by adding a CRC (Cyclic Redundancy Check) at the end of the packet. This way the corrupted packets are identified and the packet is requested again. The second issue of providing reliable links is solved on a first level by adding dedicated routers to act as repeaters and provide paths to unreachable nodes and on a second level by choosing routes with strong SNR and high reliability of link. The third issue concerning the sharing of the licensed band is solved by simply not sharing it, meaning that the data is requested sequentially from each node so that only one node in the network can transmit at each moment. Note that data collections can be performed in parallel in different subnets (subnet: a network consisting of a concentrator and all the installations associated to it). %This approach has major differences from the one that is implemented in the simulation model. Moreover, it is chosen to abstract from those mechanisms that were not directly affecting the outcome of comparison between the two models.
+
+An additional mechanism chosen and implemented by Kamstrup is to create secondary routes for each installation. When a problem at the primary route is detected (i.e. bad link quality between two routing modules on the path) the concentrator requests the data packets to be delivered using the secondary route. In this project we do not consider changes in the environment, which results in static links and makes such a functionality irrelevant, thus giving us the possibility to abstract from it.
+
+On the contrary, the fact that popular methods of providing reliability, such as Forward Error Correction, CSMA/CA, etc., would not be available was clear from the beginning. That is due to the hardware constraints of the given existing system. Despite this fact, it is chosen to provide an implementation based on an approach that would not be delimited by it.
+
+In summary, this project does not try to address the reliability issues, but wants to model the effect (delays) of the most relevant reliability mechanisms on the system. The effective channel sharing is considered to be the most challenging task and the one that can set the boundaries to the performance of this specific system.
+
+In the following subsections a description of techniques that a considered for sharing the common channel.
+
+\subsection{Collision avoidance}
+
+In a network where multiple nodes operate, sharing a common medium to interchange messages, collisions are bound to occur when no mechanisms or rules apply on the transmissions. A collision is the corruption of the transmitted frames when more than one node accesses the common medium at the same time. Collision avoidance mechanisms ensure to prevent collisions without degrading the medium utilization.
+
+Telecommunications distinguish the concept of `sensing the carrier' (CSMA) in two different categories according the actions they perform after sending it. The first detects the collisions (CSMA/CD) and retransmits the data after a random back-off interval. This is more appropriate and thus widely used in wired networks. The second one attempts to avoid collisions (CSMA/CA) either by sensing the channel or by receiving a clear-to-send message from the receiver node. This approach performs well on wireless networks. The clear-to-send message solves the `Hidden Node Problem' that is described in the figure below.
+
+\figur{0.3}{hidden_node}{The hidden node problem in wireless communications: Node A and C cannot hear each other so they try to send to B at the same time. Inside the area B is in the collision occurs \citep{hiddennodefig}}{fig:hidden_node}
+
+%Fast data collection protocol uses a striped down mechanism of collision avoidance. Our decision for implementing such functionalities on certain types of our nodes was motivated by the necessity of having multiple transmissions in order to realize our protocol. The most relevant outcome of this implementation for our project is providing determinant delays as part of the model. In the case where these delays were not introduced
+
+In this project, among the aforementioned techniques, we use carrier sensing and we introduce a back-off after the detection of another transmission from the neighbours. This means that the nodes of the network that need to send data, listen to the channel and when the channel is detected as idle they take it in order to send their data.  Moreover, there are other aspects to consider like the sleep/wakeup window implemented on lower layers. According to this, nodes can only have a specific time window in order to perform any operations or transmissions.\\
+Since the scope of this project is to introduce a routing scheme, collision avoidance is utilized in order to provide the determinant delays of such a mechanism to our model but at the same time to provide a basis for implementing more powerful routing algorithms. One of the objectives of this project is to also improve the current data collection method used by Kamstrup. With this as a given, one can understand that medium access control methods are key to this case. This is what the access with collision avoidance control does in this project in a rather simplistic way.
+
+\subsection{Retransmission}
+
+The retransmission mechanism guarantees that all the messages will reach the end destination, in this case the concentrator. It can be performed on a hop-by-hop basis or on an end-to-end basis by performing a CRC check. In the case where the packet is received with no errors an Acknowledgment (ACK) packet is sent back. When the sender does not receive an ACK within a time limit, it attempts to send the data again. This is a generic way reliable transmission protocols (e.g. Transmission Control Protocol) operate in order to assure data integrity. 
+
+In the designed approach, this mechanism will operate differently in order to comply with the energy constraints. The nodes that act as simple meters only respond to the router they are assigned to, when they are asked to do so. The nodes that operate as routers check the packet correctness and trigger a retransmission from the specific node whenever the packet is found to be corrupt. Likewise, when there is a corrupt packet received when transmitting from one router to another router, a retransmission will also occur. Following this approach, slightly increases the processing needs on the routing module, but saves a lot of energy by minimizing the transmissions.
+
+The reasoning behind the need of such a functionality, which is fairly simpler and less effective than the collision avoidance, relies on the reasons mentioned below:
+
+\begin{itemize}
+\item Simple meter's capabilities are bounded to a great extent by their hardware.
+\item Listening to the channel cannot be justified for meters, when only one packet is sent from them and packets drops occur rarely.
+\end{itemize}
+% Bullet explanation
+The nodes with routing modules are considered to be more sophisticated. The nodes with no routing capabilities, on the other hand, are treated as the simplest network devices. It is assumed that on these meters no radical changes can be performed, since they are constrained even more by their hardware. Moreover, the objective of such devices is limited to transmitting their own data packets. This means that it wouldn't be so practical sensing the channel just for one packet transmission.
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % %
+%As mentioned before, the retransmission mechanism has a fairly simple implementation as it retransmits the packet (once) to its intended destination. This way we ensure that the concentrator, which is ultimately the destination of every message, receives the messages from all the nodes. It can be made clear from the preceding text that retransmission techniques mostly operate on an end-to-end level where the delay criteria tend to scale up and become a more critical matter to the performance of the network.
+
+%Additionally to the minimisation of delay of the network via retransmissions, we also want to evaluate the technique itself as we are heavily interested in the power consumption of the nodes and the network in overall. As we want to minimise the number of transmissions from the nodes, this coherently affects the retransmissions as well. This way we also conserve network resources and battery power (through processing power minimisation).
+% Are we going to set a specific retransmission time-out? - We are but it is going to go in the implementation section
+%Ending this subsection, the purpose of the retransmission mechanism is highlighted. It implements the redundancy we need, under certain constraints, in order to ensure reliable and fast data aggregation of all the messages in the system to the concentrator. The retransmission approach is deemed to be the better fit regarding the scope of this project since there are physical limitations on both the application layer of the nodes as well as in the hardware that limit the extensive use of more advanced control techniques e.g. Forward Error Correction (FEC), CSMA/CA, etc.

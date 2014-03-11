@@ -1,0 +1,77 @@
+%  A simple AAU report template.
+%  2011-12-04 v. 0.1.1
+%  Copyright 2010-2011 by Jesper Kjær Nielsen <jkn@es.aau.dk>
+%
+%  This is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of\texttt{}
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%1
+%  You can find the GNU General Public License at <http://www.gnu.org/licenses/>.
+%
+\input{setup/preamble.tex}% package inclusion and set up of the document
+\input{setup/hyphenations.tex}% 
+\input{setup/macros.tex}% my new macros
+
+\begin{document}
+%frontmatter
+\pagestyle{empty} %disable headers and footers
+\pagenumbering{roman} %use roman page numbering in the frontmatter
+\input{chapters/formalities/frontpage.tex}
+%\includepdf{figures/forside.pdf}
+\cleardoublepage
+%\input{chapters/formalities/colophon.tex}
+\input{chapters/formalities/titlepages.tex}
+\input{chapters/formalities/preface.tex}
+\pagestyle{plain}
+
+%Insert table of contents chapter on even page insted of odd page
+\makeatletter\@openrightfalse
+
+\pdfbookmark[0]{Contents}{label:contents} 
+\begin{keeppage}
+  \tableofcontents
+\end{keeppage}
+% Make all the rest chapters start on odd pages
+\@openrighttrue\makeatother
+
+\cleardoublepage
+
+\pagestyle{fancy} %enable headers and footers again
+%mainmatter
+\pagenumbering{arabic} %use arabic page numbering in the mainmatter
+
+% Report contents
+\input{chapters/introduction/introduction.tex}
+
+%------------------------------------------------
+%\input{chapters/preanalysis/preanalysis.tex}
+%\input{chapters/analysis/analysis.tex}
+%\input{chapters/delimitations/delimitations.tex}
+%\input{chapters/design/design.tex}
+%\input{chapters/analysis/analytical_bounds.tex}
+%\input{chapters/simulation/simulation.tex}
+%\input{chapters/conclusion/conclusion.tex}
+
+% Bibliography
+\bibliographystyle{plain}
+\bibliography{bib/mybib}
+\label{bib:mybiblio}
+
+% Appendix
+\appendix
+\settocdepth{chapter}
+\input{appendix/appendix.tex}	
+%\input{setup/acronyms.tex}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

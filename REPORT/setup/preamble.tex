@@ -1,0 +1,309 @@
+	%  A simple AAU report template.
+%  2011-12-04 v. 0.1.1
+%  Copyright 2010-2011 by Jesper Kjær Nielsen <jkn@es.aau.dk>
+%
+%  This is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You can find the GNU General Public License at <http://www.gnu.org/licenses/>.
+%
+\documentclass[11pt,twoside,a4paper,openright,fleqn]{report}
+\usepackage{etex} % Inserted to be able to use listings package. Should be placed right after the documentclass definition.
+\usepackage{paralist}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language, Encoding and Fonts
+% http://en.wikibooks.org/wiki/LaTeX/Internationalization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Select encoding of your inputs. Depends on
+% your operating system and its default input
+% encoding. Typically, you should use
+%   Linux  : utf8 (most modern Linux distributions)
+%            latin1 
+%   Windows: ansinew
+%            latin1 (works in most cases)
+%   Mac    : applemac
+% Notice that you can manually change the input
+% encoding of your files by selecting "save as"
+% an select the desired input encoding. 
+\usepackage[utf8]{inputenc}
+% Make latex understand and use the typographic
+% rules of the language used in the document.
+\usepackage[english]{babel}
+% Use the vector font Latin Modern which is going
+% to be the default font in latex in the future.
+\usepackage{lmodern}
+% Choose the font encoding
+\usepackage[T1]{fontenc}
+
+% insert pdf package
+\usepackage{pdfpages}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphics and Tables
+% http://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+% http://en.wikibooks.org/wiki/LaTeX/Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The standard graphics inclusion package
+\usepackage{graphicx}
+% Set up how figure and table captions are displayed
+\usepackage{caption}
+\captionsetup{%
+  font=footnotesize,% set font size to footnotesize
+  labelfont=bf % bold label (e.g., Figure 3.2) font
+}
+% Make the standard latex tables look so much better
+\usepackage{array,booktabs}
+\pdfoptionpdfminorversion=6				% Allows inclusion of pdf documents, of version 1.6 and higher
+% Allows pdflatex to compile with .eps included, Egon 2013-05-22
+\usepackage{epstopdf}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page Layout
+% http://en.wikibooks.org/wiki/LaTeX/Page_Layout
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable arithmetics with length. Useful when
+% typesetting the layout.
+\usepackage{algorithm2e}
+
+\usepackage{calc}
+
+% Change margins, papersize, etc of the document
+%\usepackage[a4paper]{geometry}
+%\setlength{\oddsidemargin}{15.5pt} 
+%\setlength{\evensidemargin}{15.5pt}
+\usepackage[a4paper,inner=3.5cm,outer=2.5cm,top=4cm,bottom=4cm,pdftex]{geometry}
+
+% Change the headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} %delete everything
+\fancyhead[RE]{\small\nouppercase\leftmark} %even page - chapter title
+\fancyhead[LO]{\small\nouppercase\rightmark} %uneven page - section title
+\fancyhead[LE,RO]{\thepage} %page number on all pages
+%\fancyfoot[C]{--- Confidential ---}
+\setlength{\headheight}{13.6pt} 
+% Do not stretch the content of a page. Instead,
+% insert white space at the bottom of the page
+\raggedbottom
+% Insert space between paragrapsh and dont indent first line:
+% Used instead of setlength{\parskip}{10pt plus 1pt minus 1pt} and \setlength{\parindent}{0pt}
+\usepackage{parskip}
+
+% adjust space arround chapter, section, subsection, subsubsection
+% http://mirrors.dotsrc.org/ctan/macros/latex/contrib/titlesec/titlesec.pdf
+\usepackage{titlesec}
+%\titlespacing*{\chapter}{0pt}{-50pt}{40pt}
+\titlespacing\subsection{0pt}{4pt plus 2pt minus 2pt}{-4pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{4pt plus 2pt minus 2pt}{-6pt plus 2pt minus 2pt}
+%Define new chapter style - By Mads - 28 May 2013
+\titleformat{\chapter}
+  {\normalfont\Huge\bfseries}{\thechapter}{1em}{}
+\titlespacing*{\chapter}{0pt}{18pt plus 5pt minus 5pt}{50pt plus 5pt minus 5pt}
+
+% Proper page numbering - all pages of toc
+% http://tex.stackexchange.com/questions/44974/number-on-all-pages-of-table-of-content
+\makeatletter
+\newenvironment{keeppage}{\let\thispagestyle=\@gobble}{}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Draftmark package commmented out
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[draft,allpages]{draftmark}
+
+%\draftmarksetup{mark={\begin{minipage}{0.1\textwidth} \begin{flushright} CONFIDENTIAL \end{flushright} \end{minipage}},color=gray,grayness=0.5,scale=0.1,ycoord=-125,angle=10}
+%\draftmarksetup{mark=CONFIDENTIAL,color=gray,grayness=0.5,scale=0.1,xcoord=30,ycoord=-125,angle=0}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematics
+% http://en.wikibooks.org/wiki/LaTeX/Mathematics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines new environments such as equation,
+% align and split 
+\usepackage{amsmath}
+% Adds new math symbols
+\usepackage{amssymb}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+% http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add the \citep{key} command which display a
+% reference as [author, year]
+\usepackage{natbib}
+% Appearance of the bibliography
+\bibliographystyle{apalike}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Misc
+% http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add bibliography and index to the table of
+% contents
+\usepackage[nottoc]{tocbibind}
+% Add the command \pageref{LastPage} which refers to the
+% page number of the last page
+\usepackage{lastpage}
+
+% FixMe package to insert notes
+% Doc-Link: http://www.lrde.epita.fr/~didier/software/fixme.pdf
+% The xkcltxp package is needed to make the fixme-package work.
+% fxsetup is used to setup different parameters for the fixme-package
+\usepackage{xkvltxp}
+\usepackage[draft, english]{fixme}
+\fxsetup{footnote,nomargin}
+
+% tocvsec2 - set table of content depth with \settocdepth{section}
+\usepackage{tocvsec2}
+
+% Landscape pages: http://en.wikibooks.org/wiki/LaTeX/Page_Layout #Change_orientation_of_specific_part
+\usepackage{pdflscape}
+
+% package for customizing enumerate, itemize, description environments
+\usepackage{enumitem}
+
+% packages for using tikz figures
+\usepackage[subrefformat=parens,labelformat=parens]{subfig}
+\usepackage{tikz}
+\usepackage{pgf-umlsd} % UML figures, must come before tikz-uml, to avoid layer fuck-up
+
+
+\usepackage{tikz-uml} % UML figures
+\usetikzlibrary{arrows,automata,decorations.pathreplacing,backgrounds,positioning,calc,shadows,shapes,backgrounds,patterns}
+
+% package for defining acronyms. see acronyms.tex for definitions
+\usepackage[printonlyused]{acronym}
+
+% package for listing source code.
+% lstset from: http://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+\usepackage{listings}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+% package for drawing nice folder/directory tree structures.
+%\usepackage{dirtree}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperlinks
+% http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable hyperlinks and insert info into the pdf
+% file. Hypperref should be loaded as one of the 
+% last packages
+\usepackage[hyphens]{url} % fix urls in bibliography to be wrapped when they are long.
+\usepackage{hyperref}
+\hypersetup{%
+	%pdfpagelabels=true,% commented out, gave warning: Package hyperref Warning: Option `pdfpagelabels' has already been used,
+	plainpages=false,%
+	pdfauthor={--, --},%
+	pdftitle={Collective data aggregation},%
+	pdfsubject={Something something},%
+	bookmarksnumbered=true,%
+	colorlinks,%
+	citecolor=black,%
+	filecolor=black,%
+	linkcolor=black,%
+	urlcolor=black,%
+	pdfstartview=FitH%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Font style
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable strike through or strike out of text with \sout{TEXT}
+\usepackage[normalem]{ulem}
+
+\usepackage{multirow}
+
+\usepackage{float}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definitions for quotation styles:
+% Ref: http://tex.stackexchange.com/questions/16964/block-quote-with-big-quotation-marks
+
+\newcommand*\openquote{\makebox(25,-22){\scalebox{2}{``}}}
+\newcommand*\closequote{\makebox(25,-22){\scalebox{2}{''}}}
+
+% End of quotation style definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newcommand*\cleartoleftpage{%
+%	\cleardoublepage
+%		\ifodd
+%			\value{page}\hbox{}\newpage
+%		\fi
+%}
+
+%\makeatletter
+%\newcommand*{\cleartoleftpage}{%
+%  %\cleardoublepage
+%    \if@twoside
+%	    \ifodd\c@page
+%	      \hbox{}\newpage
+%	    \fi
+%  	\fi
+%}
+%\makeatother
+
+% verbatim boxed text
+\usepackage{fancyvrb,fancybox,calc} 
+\newenvironment{code}{\VerbatimEnvironment% 
+  \noindent
+  %      {\columnwidth-\leftmargin-\rightmargin-2\fboxsep-2\fboxrule-4pt} 
+  \begin{Sbox} 
+  \begin{minipage}{\linewidth-2\fboxsep-2\fboxrule-4pt}    
+  \begin{Verbatim}
+}{% 
+  \end{Verbatim}  
+  \end{minipage}   
+  \end{Sbox} 
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% table setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Packet to support tables across multiple pages
+\usepackage{longtable}
+\usepackage{colortbl}
+
+%%%%%%%   THIS IS WHAT I ADD
+
+% tabularx allows some features for tables
+\usepackage{tabularx}

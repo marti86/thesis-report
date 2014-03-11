@@ -1,0 +1,30 @@
+\section{Simulation}
+\label{sec:simulation}
+
+% why - what do we expect to get out of this simulation?
+% move expectations up -> we expect to get parameters about the best way to get a get fast data collection}
+
+From a practical point of view, simulations are more often used to predict a system's behaviour and can be used for conditions that are difficult or even impossible through testbeds due to scalability constraints. When it comes to large networks, the most efficient approach of measuring their performance is to create a realistic simulation that approximates the system's expected behaviour. The simulation approach helps us obtain a better and directly comparable view of the system's performance.\\
+Moreover, it is generally less costly than experimenting in a testbed. The only existing costs are the simulation software cost and the work hours that will be spent to create the simulation model. Under real, non-simulated, conditions the downsides of testing include longer run-times, a longer set-up phase and hardware costs. The simulation approach offers repeatability, through which a large number of scenarios can be tested and compared, examining the exact same system under different input or implemented routing schemes. Adding to that, by increasing the complexity of the simulation model a better representation of the system can be achieved, leading to simulation results closer to results from the real world. Lastly, simulation can offer a shorter run-time compared to a testbed, allowing fast results when changing parameters between tests. An advantage to simulation is the ability to investigate if a system is future-proof, meaning for example that the network size can be scaled higher than what is seen in a real world environment. Scaling a network is not easily achievable for testbeds since it will require many hardware components. The main advantages of simulating are presented below:
+
+\begin{enumerate}
+\item Approximate depiction of reality
+\item Insightful system evaluation
+\item Future proofing of the system
+\end{enumerate}
+
+\subsection{OMNeT++ : What and Why}
+It was chosen to use the OMNeT++ simulation tool \citep{omnet}, because it has a good performance for large networks and some group members have previous experience working with the tool. Furthermore OMNeT++ offers a variety of frameworks. A general description of the OMNeT++ network simulator is provided below.
+
+OMNeT++ is a network simulator that can support several kinds of networks, including wired, wireless, satellite, etc. Its functionalities can also be extended through specific frameworks that improve the detail and functionalities of specific network types. Such examples are the Mixim framework, which provides mobility features, and the INET framework that supplements the wireless network simulation palette. OMNeT++ provides its own data format (.NED files) for the creation and operation of the network, however at the base level all the functionalities are built using the C++ programming language that allows for modularity and customization down to the most basic components; that is the user being able to create his own submodules to implement specific functionalities that exist or fit in his specific case.
+
+However in the cases examined in this project, since they are quite different from what is usually implemented, most of the work was done from scratch utilizing OMNeT++'s simulation code support and programming the necessary modules and functionalities in C++. It is feasible at this point to make an analytic reference to the components of the network that was created through OMNeT++ and what is the significance and role of each. The network consists of four kinds of nodes, The concentrator (this is the initiator of the communication and also the recipient of all the aggregated data), the routers (their tasks are to route the packets from the concentrator to the meters and vice versa and will in the designed approach also perform in-network data aggregation), the meters that have routing modules (meters that additionally are able to route traffic and also perform in-network data aggregation) and lastly the meters (meters generate measurements of resource consumption, and they send their data towards the concentrator).
+
+Regarding the simulation implementation, Kamstrup provide relevant data from their network so a connected graph can be constructed to represent the network. Kamstrup's data will provide information about the connectivity and location of devices in the network.
+The main scope of this project will be to improve the data collection process of the network, by implementing a routing scheme, as explained in the problem formulation in section \ref{sec:problemformulation}. Towards that end, the task is to implement a set of protocols and compare their performance in the imported network. One of the protocols will be Kamstrup's sequential data collection and the other one will be a designed routing scheme that will be inspired by state-of-the-art solutions from the Automated Meter Infrastructure (AMI) field of research.
+
+In AMI systems such as Kamstrup's, end goal is fast and energy-efficient data collection. The simulation approach allows for testing and tweaking of several parameters that affect this specific objective. The output of the simulation regarding the performance of the network should allow us to understand what parameters of the network and under which specific setup, have greater impact towards a fast and reliable data collection.
+
+A set of goals and certain expectations from the simulation approach are now defined. One of the expectations, and maybe the most important, is to find parameters that optimize the data collection task. The term `optimise' is used to mainly describe the focus of the simulation in regard to the data collection aspect that we wish to optimise. This can be, data collection  time, throughput, power consumption, etc.
+
+

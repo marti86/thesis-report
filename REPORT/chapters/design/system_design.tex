@@ -1,0 +1,65 @@
+\section{System design}
+\label{sec:system_design}
+
+% short description of general approach - broadcast + concatenation
+% reference to bounds + delimitation
+
+% as delimitation has described - the focus is on..
+% 
+
+% setup phase
+
+
+The system design will contain a description of how specifically Kamstrup's sequential data collection had been interpreted and include the system design of the Fast Data Collection approach. These two approaches are compared to show the differences in how the data collection is performed. Figure \ref{fig:system} shows the phases in the two approaches, which is used when describing the two approaches in the following sections. The section will end with a comparison of the interpretation and the Fast Data Collection design, to represent the main differences in the two approaches.
+
+\figur{0.5}{system}{Comparison of the phases the two approaches go through.}{fig:system}
+
+\subsection{Kamstrup's sequential data collection}
+\label{sec:system_design:kamstrup}
+
+By investigating Kamstrup's sequential data collection in section \ref{sec:kamstrup_implementation}, the different aspects of the approach become apparent. It is interpreted to contain a single phase for data collection and has no need for putting the system into a maintenance or a setup phase as is the case for the Fast Data Collection approach. This phase is called an operating phase, and is capable of performing the following tasks:
+\begin{itemize}
+%\item Allows to add devices while operating
+\item Collects sequentially from one meter at a time
+\item Uses a route with maximum 10 hops for requests and responses.
+\item A new data collection round starts at some point after the previous has finished.
+\end{itemize}
+
+\subsection{Fast Data Collection}
+\label{sec:system_design:fdc}
+
+The Fast Data Collection approach seeks to find a solution to minimise the data collection time, while adhering to low power nature of the devices in the network. The low power nature, will be taken into account by generating a tree structure using a cost for links designed to assure low power consumption, but still achieving a better data collection time compared to Kamstrup's sequential data collection. The cost will seek to achieve good signal quality, minimise the number of transmissions, and balance the load of in-network data aggregation. All these aspects allow for a reduction in power consumption, and seeks to acquire a short data collection time.
+
+The Fast Data Collection approach contains two phases, a setup phase and a operating phase, as is seen in figure \ref{fig:system}.
+
+The setup phase consists of the following aspects:
+\begin{itemize}
+\item Generate tree structure used for responses
+\item Send these information (parent and children relations) to devices capable of routing
+\end{itemize}
+And the operating phase consists of the following aspects:
+\begin{itemize}
+\item Broadcast a request to all devices capable of routing
+\item Routing meters send measurement immediately after receiving a request
+\item Broadcast is forwarded by devices with routing capabilities
+\item Sequential requests from routers to meters
+\item Concatenation performed while propagating towards concentrator
+\item New round started at some point after the previous has finished
+\item New setup phase started if a specified number of rounds has been reached
+\end{itemize}
+
+Since broadcasts are used for requests, the tree will only be used when responding to requests. This is represented in figure \ref{fig:response_request}. At this point it is necessary to have a route so in-network data aggregation can be performed (see section \ref{sec:data_aggregation} for its design). Broadcasts are used because they show a big advantage in data collection time, which can be seen in the analysis of the analytical bounds (see section \ref{sec:analytical_bounds}). To allow the broadcasts, a channel is designed in section \ref{sec:channel} in order to introduce delays due to collisions. This will allow the two approaches to be comparable.
+
+\figur{1}{response_request}{A representation of how requests and responses are performed using the fast data collection approach.}{fig:response_request}
+
+When a tree is generated, information about the tree is sent to the routers and routing meters. The devices capable of routing will acquire information on their parent and children (meters). These informations are needed because requests are performed sequentially in order to reduce the number of re-transmissions due to meters are not being able to perform collision avoidance. This means that it can be guaranteed that collisions cannot occur between meters associated to the same router, but can occur between meters associated to different routers. Figure \ref{fig:response_request} shows a representation of how a sequential requests and responses can be performed to meters.
+
+Due to the nature of minimum spanning trees, some nodes will be aggregating more data than others. This requires some sort of balancing of power consumption over time, by moving the load over to other nodes, and thereby decreasing the maximum power consumption of the individual nodes. Balancing increases the lifetime of the individual nodes. This procedure is inspired by PEDAP, described in section \ref{sec:state_of_the_art} and will be ensured in the Fast Data Collection protocol through the cost function. Since the costs are changing over time, but the tree is not, it is required to regenerate the tree after a specific time. This is seen in figure \ref{fig:system}, where the state changes to the setup phase is performed when \mbox{$round\_nr \mod X = 0$}, meaning that the round number is divisible with $X$ with no remainder. This means that $X$ represents the interval of rounds before a new tree is generated.
+
+In order to minimise the data collection time, it is chosen to perform the data collection before requests have been propagated to the entire network. This becomes apparent when considering routing meters, because they can be placed in any level of the tree and generate measurements, while meters are only places in the leaves of the tree. This means that routing meters will generate measurements and send them to its parents, before forwarding the broadcast, requesting measurements from its potential meter children or receiving data from a lower level of the tree. Figure \ref{fig:routing-meter} represents the different devices' relation to the level of the tree.
+
+\figur{0.5}{routing-meter}{A representation of how routing meters can be places in any level of the tree.}{fig:routing-meter}
+
+When a data collection round has been completed, meaning that measurements have been received from all meters/routing meters, a new data collection round can be started. This new data collection round can either be initialised to conform to an interval, or be performed immediately after completion of the previous. A data collection round is always initialised and deemed complete by the concentrator.
+
+Now that the general system design has been described for the two phases of the Fast Data Collection approach, the individual devices are designed.

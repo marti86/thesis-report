@@ -1,0 +1,109 @@
+\chapter{Delimitations}
+\label{sec:delimitations}
+In this chapter, all the aspects of the actual network of Kamstrup, that have been delimited in this project are presented. The majority of the delimitation describes the focus on the designed approach and feasibility of the project in terms of achieving a simulation that is comparable to Kamstrup's sequential data collection.
+
+The project work is based on the network of Kamstrup and is compared to their sequential data collection approach. It is impossible to implement every detail and it is not necessary for getting the desired comparison.
+
+%It has been chosen to design an approach named fast data collection and design and implement what is described in the delimitation. The main idea is to perform broadcasts for requests and transmit responses through a tree structure while using concatenation. At the end of this chapter a section describing the analytical bounds (see section \ref{sec:analytical_bounds}) shows a clear advantage for the fast data collection approach in the upper bounds for the data collection time.
+
+\section{Tree for data aggregation}
+In order to aggregate data within the network a tree topology has been chosen. To create a tree topology using Kamstrup's given network some abstraction had to be done. Given a network $G=(V,E)$ the question comes up on how to turn that into a tree. A tree is specified as a structure connecting all vertices (also termed as nodes) where every vertex must have exactly one parent but can have zero to many children. The only vertex breaking this constraint is the root, which does not have a parent. Thus a child-node can act as parent for a sub-tree and a strictly hierarchical structure will be generated with the root on top (also known as the sink in WSNs and the concentrator in Kamstrup's network). Since the concentrator is the place where all data needs to end up, a tree structure can be easily used to combine data while aggregating towards the concentrator. Basically all leaves send data to their parent and there, those data will be combined with data from other leaves. However, this is a theoretical approach. In a real world application it must be considered that packets have a maximum length and the nodes might have limited memory, meaning that not all packets can be combined.
+
+To create the desired tree $T=(V,E_T)$, $E_T {\subseteq} E$ from the Graph $G=(V,E,\omega)$ an algorithm will be used. This algorithm will answer the question of which edges should be chosen in order to retrieve the best tree for the given problem. This problem is an optimisation problem. The solution in this project will seek to find costs that indicate a good signal quality, small number of transmissions and balance the energy usage of the individual aggregators in the network. These costs can then be used in a spanning tree algorithm to construct a tree.
+
+\section{In-network data aggregation}
+The previous chapter already mentioned the usage of data aggregation and how this is related to the tree structure. The main goal is to reduce the number of transmissions in order to achieve a smaller power consumption. The question is then, how data aggregation can be performed. The easy answer is by concatenation. What does this mean precisely? The data that a meter is sending has a size between 75 and 150 bytes. Since this value is smaller than the allowed maximum packet size of 250 bytes, 1 to 3 packets can be concatenated to one ``combined packet''. Unfortunately the concatenation could be far from optimal purely because this node has not enough data to work on. However, its parent might have more data, so sending a not optimally packed packet is still better than sending two individual packets and then allowing the parent to find a better fit.
+
+The number of transmissions can be easily reduced by compressing data. Compression works in a way that it tries to find equal symbols in a string of data. These symbols are stored in a table and replaced in the original string with a unique placeholder. This method works very well in cases where a lot of duplicate data is given like in movies, music or even plain text. Also compression works best when the amount of data is very big. These two specifications are the disqualifiers for compression. The data a node receives is very small (75..150 bytes) and in order to protect privacy of the households they are encrypted. Encrypted data are highly uncorrelated, what makes compression nearly impossible. Thinking about these drawbacks lead to the conclusion that compression would be possible but the achievable data compression ratio would be very small in comparison to the necessary energy for this operation. As a result the idea of using compression is discarded.
+
+The term data aggregation is often used together with WSN where the word is used more freely. Aggregating data is often meant in a way that data can already be analysed within the network. As an example imagine a sensor network measuring the temperature in a specific area. For an observer it is not of direct interest to see the temperature on every node in the network. The observer could be interested in observing the temperature in this area. This can be performed by computing the average temperature in the area. Data aggregation in this term means that the actual computation is performed within the network by the network nodes. However, this concept does not seem to fit in our scenario very well. For billing purposes it is required to retrieve the data without any changes. Another drawback is that since the data are encrypted it would be necessary to decrypt them in order to perform calculations on them. Since smart grids are an upcoming topic for research, these kind of data could be very interesting for power plant providers to control the energy production.
+
+%\item \textbf{Channel:} Design simple channel for introducing delay for collisions, explicitly describe what parts we will use and won't use (refer to reliable communication section). Also describe the differences in collision avoidance between the different devices.
+\section{Channel}
+Collisions are important to consider in wireless communication. A collision happens when two or more nodes try to send at nearly the same time. Their expected receivers are listening but cannot understand what they receive. This is basically the same as many people talking at the same time and one tries to listen to a specific person. It is very likely that the listening person does not understand the message correctly. Kamstrup reduced the number of collisions drastically by allowing only a single message to be in the air at a time. However, this is penalised with a very long data collection time.
+
+In the designed approach, multiple transmissions will be able to occur at the same time. This immediately leads to thoughts of how multiple packets can be retrieved at nearly the same time. The solution is to design a channel that can represent a collision when it happens. Firstly collision avoidance can be implemented by listening to the channel before sending. If the channel is currently occupied, the message will be temporarily stored and the channel will try to send it again after a small delay. This postponing of sending a message is called a backoff. Even if that cannot avoid collisions completely, it is much more unlikely that packets will collide. Since the capabilities of Meters are very limited CSMA is not used on these devices. The advantage is that the firmware of the meters do not need to be changed and they can just keep on operating as before. If a collision occurs between a meter and the requesting router, the router does not receive the expected data and simply sends a new request.\\
+Even though the time of a transmission is very fast, it is not immediate. This delay is the main factor for the data collection time. For simulation the delay will be calculated considering the speed of the medium and the size of the packet. The channel is the same in Kamstrup's and the designed approach. This way the results are comparable.
+
+\section{Setup phase}
+One idea of the Fast Data Collection routing scheme is that it independently propagates the data back to the concentrator. This propagation mechanism is based on the parent and children concepts in a tree structure. The children propagate their data to their parent, where the parent of everyone (root of the tree) is the concentrator and the one who will ultimately receive all the data. But how does a node know who its parent is? The concentrator has this knowledge because this device computes the tree. Obviously this information has to be spread into the network somehow. This calls for a setup phase.\\
+How the setup will be performed can be chosen freely as long as after the setup it can be assured that every network device has the information needed. For setup a sequential approach can be chosen, delivering the required information one after the other. There is no need to wait for a response, as it happens in Kamstrup's sequential data collection, so the next setup packet can be sent directly after the previous one has been sent. This is due to the channel being able to handle multiple transmissions at the same time (see section \ref{sec:reliable_communication}). The pseudo code in Algorithm \ref{algo:pseudocode_1} will show how this could be done, using Dijkstra's shortest path algorithm.
+
+\begin{algorithm}[H]
+Store addresses of all devices except the concentrator in a stack $s$\;
+ \While{$\neg$empty($s$)}{
+  Element $e$ = $s.pop()$\;
+  Path $path$ = Dijkstra's\_Shortest\_Path($root$, $e$)\;
+  Parents $p$ = parent($e$)\;
+  Children $c$ = children($e$)\;
+  Send($e$, $path$, $p$, $c$)\;
+  %\While{$\neg$response}{
+  %	NOP\;
+  %}
+ }
+ \caption{Sample algorithm for distributing tree information into the network.}
+ \label{algo:pseudocode_1}
+\end{algorithm}
+
+%\item \textbf{Fixing tree due to bad connections/Reliability of network:} Parent connection drops. We assume good connectivity. (solved e.g. by using a secondary tree that it built by not using the same links as the primary tree, explain possible problems with this OR use a set-up phase only for the sub-tree, using new information on connectivity)
+\section{Reliability}
+Reliability plays another important role in a real world network. What happens when after an event, a connection to a node or a whole part of the tree is lost? For requests performed after this change in connectivity, it is not so important because the broadcast does not need to follow the tree structure and will reach the unconnected nodes most likely via another route. However, when responses are performed, not all data cannot be delivered since one parent cannot be reached. In this case the concentrator will notice at some point that messages from these nodes are missing. To react it needs to have an alternative. There are at least three ways this can be done.
+
+Nodes which do not deliver data within a certain time interval can be treated as lost. To receive the data, these nodes can be requested sequentially. This will retrieve the data, but means that all device in between have to implement both protocols. Since the meters are requested sequentially nothing changes there. Even if this technique delivers data from all nodes, it does not cure the problem.
+
+In order to keep the data collection time as small as possible another approach could be to generate a second tree. However, this tree has to be different from the primary tree which leads to the problem of how to create such a structure. Since for one graph multiple trees can exist and the tree algorithm chooses only one it is not assured that another algorithm will find a different tree. So it is not possible just to exchange the algorithm used for tree construction. But since the cost function has already been used to generate a better tree in terms of balancing and reducing the total number of transmissions. A cost function for the secondary tree could look like this:
+\begin{equation}
+\hat{c}_{e_{i,j}}(s, d, t) = 
+	\left\{
+		\begin{array}{ll}
+			\alpha  & \mbox{if } e_{i,j} \mbox{ is in the primary tree} \\
+			c_{e_{i,j}}(s, d, t) & \mbox{else}
+		\end{array}
+	\right.
+\end{equation}
+$$
+\mbox{, where } \alpha \in \mathbb{R} \mbox{ and very large.}
+$$
+
+A secondary tree might be a reliable fall-back technique but it does not necessarily fix the original one. As mentioned before the tree can be represented with a table showing the node and the parent of that node. If an error occurs it just needs to be recognized where and set a new parent. This can be accomplished by computing a suitable new parent and delivering this value to the node. While the node is not connected to its parent any more, it still has radio connections to other devices over which it can be reached. Using an algorithm like Dijkstra Shortest Path will return a suitable path, avoiding the lost connection. Setting a new parent basically means that the whole sub-tree is moved. However, the new tree will probably not be optimised according to the designed cost function but will achieve a fully connected tree. Since this is a indicator of drastic changes in the network connectivity a setup phase should be considered very soon. This would allow a re-calculation of the tree using the new connectivities allowing the whole graph to be optimised according to it costs once again.\\
+A delimitation is performed on the packet losses and changes in connectivity so it is not necessary to implement these fall-back techniques.
+
+\section{Summary}
+In order to summarise the delimitation, the focus and delimitations will be presented. For the \textbf{Tree for data aggregation} the following delimitations are performed:
+
+\begin{itemize}
+\item A tree structure is created using Kamstrup's network and information on connectivity
+\item A cost is designed for connections between nodes in order to create a network wide optimisation that achieves a good signal quality, tries to minimise number of transmissions and creates a balancing of power consumption for the individual nodes.
+\item The generated tree does not need to be constrained by 10 hops, because the in-network data aggregation of data only uses one hop to transmit to a parent.
+\end{itemize}
+
+For the \textbf{in-network data aggregation} the following delimitations are performed:
+\begin{itemize}
+\item In-network aggregation is performed through concatenation, because the effect of any other methods would not give a sufficient decrease in transmissions.
+\item Other techniques for aggregation are not possible, because there will be no significant reduction in packet size.
+\item Data collection between data collection rounds, where averages of measurements are performed, is not performed.
+\end{itemize}
+
+The \textbf{channel} is delimited in the following ways:
+\begin{itemize}
+\item Kamstrup's sequential data collection has no collisions
+\item The designed routing scheme can have collisions and a delay needs to be introduced, describing the time it takes before a transmission can be performed. This is introduced by designing a way of describing when the channel is occupied.
+\item Collisions that happen when sending a response from a meter to a router/routing meter are handled by the routing node via a new request.
+\item The channel introduces delays for simulation using the time to transmit a packet, considering the speed of the medium and the size of the packet.
+\end{itemize}
+
+In the performed simulation no \textbf{setup phase} is performed, since the main focus of the project is to minimize data collection time, so the setup phase does not have to be taken into account. A possible solution is presented in the delimitation but not further examined. The setup phase is delimited in the following ways:
+\begin{itemize}
+\item During initialization of the simulation the information of parents and meter children is implanted directly to the routers/routing meters.
+\end{itemize}
+
+The \textbf{reliability} of designed approach approach has also been investigated and a few methods have been proposed to solve the problem, but a delimitation is also performed on this part: 
+\begin{itemize}
+\item There is no implementation or design to solve issues regarding the reliability of a connection.
+\end{itemize}
+
+\subsection{Conclusion}
+In this Delimitations chapter, all the delimitations we made during this project were presented to the reader. We chose to delimit from all the previously mentioned aspects of the actual system in order to make both, Kamstrup's approach and the designed routing scheme, easily implementable as well as comparable. Moreover, basic concepts that directly affect the implementation of the simulation were explained; for example, tree structure, data aggregation, etc. Lastly, we address issues that proved significant for the designed routing scheme; such are reliability concerns and the need for a setup phase. All thing that were mentioned directly above were taken into account when implementing the simulation. However it should be noted that the actual implementation might differ from the generic concept presented in this section.
+
+%setup
+%In the performed simulation no setup phase is performed. During initialization of the simulation the information is implanted directly. This is a delimitation that is performed, since the main focus of the project is to minimize data collection time, so the setup phase does not have to be taken into account. However, in a real world application this part cannot be skipped and one possible solution is presented here.

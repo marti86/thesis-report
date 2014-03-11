@@ -1,0 +1,98 @@
+\section{Description of the data provided by Kamstrup}
+\label{sec:data_description}
+
+In the scope of this project, data is provided by Kamstrup in order to have a realistic interpretation of the network. The given data contains information about two types of networks. One of the networks is located in Finland and the other one is located in Guldborgsund, Denmark. The essential difference between the two networks is the fact that the Finnish network is powered through power lines. The network located in Denmark consists of both battery-powered and power line-connected nodes, thus introducing energy constraints and is therefore the focus of this project.
+%Towards this direction a decision was made to focus the scope of this project on the Danish network, and furthermore work under the assumption that all nodes are battery-powered as to examine the worst case scenario that can occur in this type of network.
+
+More into detail, the aforementioned data comes in the form of several files, most of them of .csv format but also .kml (format supported from Google Maps - geovisualization of the networks). The file named "Installations" (.csv) contains information about all the nodes in the network such as name of the node, longitude, latitude, etc. The structure of the Installations file is seen in table \ref{tab:installations}. The three possible roles for a node are Router, Vand (Water) and Varme (Heating).
+% Matrix for Installations.csv
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    Name & Longitude & Latitude & Role \\ \hline
+    9849 & 11.65226 & 54.774 & Router \\ \hline
+    9850 & 11.6117 & 54.76089 & Router \\ \hline
+    9851 & 12.4092 & 54.89005 & Router \\ \hline
+    7033271 & 11.91317 & 54.76061 & Vand \\ \hline
+    7035153 & 11.87783 & 54.75621 & Varme \\
+    \hline
+    \end{tabular}
+\end{center}
+\caption{Sample data of useful information from the Installations file}
+\label{tab:installations}
+\end{table}
+
+A set of files named "LocalLists\_*" (.csv), where * is the id of a node with routing capabilities, consist of information on connectivity of either a router or a meter with implemented routing module. The structure of a LocalLists file is seen in table \ref{tab:locallists}. These files are only associated with nodes that have routing capabilities and provide information about the neighbourhood of the specific node through its respective SNR values. Meters do not have LocalLists, but their connectivity to routers can be derived from the LocalLists of the routers.
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    From node & To node & SNR\\ \hline
+    9597 & 7035445 & 29 dB \\ \hline
+    9597 & 7035464 & 27 dB \\ \hline
+    9597 & 7035408 & 28 dB \\
+    \hline
+    \end{tabular}
+\end{center}
+\caption{Sample data of useful information from a LocalLists file}
+\label{tab:locallists}
+\end{table}
+
+\figur{0.8}{google-earth}{Screenshot of Google Earth environment representing the metering network in Guldborgsund, Denmark. Each multi-coloured dot is a router/meter, while a yellow landmark is a concentrator.}{fig:google-earth}
+
+A file that allows the geovisualization of the network through the Google Maps services is also provided. Even if this file is not directly applied in the simulation it helps so one can visually understand the layout of the network and the distribution of the nodes, be it concentrators, routers or meters. The AMI in Guldborgsund, Denmark, is seen in figure \ref{fig:google-earth}, and gives a graphical overview of the distribution of the nodes. A matlab plot of the same region is seen in figure \ref{fig:guldborgsund}, where the different types of nodes are represented. It can also be seen that in some households are both meters and routing meters (meters with routing modules) in the same location. The distribution of type of nodes for the same area is seen in table \ref{tab:amount_of_nodes}. For this area, it is seen that here are almost as many routing meters as meters and almost no dedicated routers.
+
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+    Type & Amount & Percentage \\ \hline
+    Meter & 4556 & $\approx$ 51 \% \\ \hline
+    Dedicated Router & 67 & $\approx$ 0.7 \% \\ \hline
+    Routing meter & 4294 & $\approx$ 48 \% \\ \hline
+    Concentrator & 31 & $\approx$ 0.3 \% \\
+    \hline
+    \end{tabular}
+\end{center}
+\caption{The amount of different types of nodes within in Guldborgsund, Denmark}
+\label{tab:amount_of_nodes}
+\end{table}
+
+\figur{0.8}{guldborgsund}{Plot of the locations of different types of nodes in Guldborgsund, Denmark}{fig:guldborgsund}
+
+A description of the routes between a concentrator and the meters is provided. This is detailed in a file named NetLists. It describes a parent, a cild and the number of remaining hops to the concentrator. The project focuses on generating routes in the network, while keeping the assigned meter-to-router associations as based on the values provided in the LocalLists.
+
+The specific data provided by Kamstrup will provide a realistic system description to the simulated network by utilizing real-world positions and SNR values.
+
+In order to create the simulation based on the previously mentioned data it is imperative that specific fields need to be extracted from the data files and used inside the simulation environment. The data will mainly be used for the creation of the nodes in the simulation environment and for generation of routes. %Data that would make sense and we want to include in our simulation are the longitude and latitude for each node along with their unique id and their role in the network (concentrator, router, meter). These data is of key importance during the creation of the nodes and the network. It allows for accurate positioning of the nodes into the simulation "playground" while being able to differentiate them through their unique IDs. An adjacency matrix, constructed from the local lists provided by Kamstrup, containing the SNR values for each pair of node (thus depicting each node's "neighbourhood") would also need to be included in the simulation. This matrix provides a clear and correct image on how the nodes should be connected in the network. This is because we seek the maximum SNR value to have the strongest connection between two nodes.
+% TODO - Close the subchapter in a less abruptly
+
+\subsection{Distribution of data}
+\label{sec:data_distribution}
+An analysis of the distributions of the SNR values and distances between network devices has been performed. A single concentrator, with ID 10053, placed at latitude $11.8811^{\circ}$ and longitude $54.7613^{\circ}$ is the focus of this analysis. A network within a radius of $250m$ of the concentrator is analysed and is seen in figure \ref{fig:concentrator10053}.
+
+\figur{0.8}{concentrator10053}{A concentrator with network devices within a range of $250$m plotted using latitudes and longitudes.}{fig:concentrator10053}
+
+Figure \ref{fig:snr_dist} shows the distribution of SNR values. It is seen that there is a large amount of the distribution that does not have a sufficient link quality above $18dB$. The amount of SNR values under $18dB$ corresponds to $42.26\%$ of the dataset, meaning that $42.26\%$ of the connections do not allow for data exchanges.
+
+
+\figur{0.75}{snr_dist}{Distribution of SNR values with bin size of approx. $2.3dB$}{fig:snr_dist}
+
+Figure \ref{fig:distance_dist} shows the distribution of distances that each network device has to all its neighbours. It is also seen that $8.84\%$ of the devices have a distance of $0$m, when using the differences in latitudes and longitudes. This means that there are cases where there are multiple devices placed in the same household. The cases where this arises is for collection of multiple types of consumption. In this case there are up to three devices in the same household.
+
+\figur{0.75}{distance_dist}{Distribution of distances with bin size of approx. $0.7m$}{fig:distance_dist}
+
+
+
+
+
+
+
+
+
+
+
+
+

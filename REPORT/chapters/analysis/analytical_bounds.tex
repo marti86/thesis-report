@@ -1,0 +1,175 @@
+\chapter{Analytical bounds}
+\label{sec:analytical_bounds}
+
+An analysis of an upper and lower bound for a data collection time needs to be performed for Kamstrup's sequential data collection and the proposed Fast Data Collection. By describing a simple representation for the two approaches a rough estimate of the bounds of the data collection time can be derived for an increasing network size.
+
+Kamstrup's approach will be modelled as a simple sequential data collection (measurements are requested and received from one meter at a time), while the Fast Data Collection approach will be modelled with a request using broadcasts and concatenation being performed while aggregating towards the concentrator. All receivers of a request through broadcast will re-broadcast the request once. Each node knows a parent for which it must send its data to and will only perform a concatenation and send data when it has received data from all its children. The following assumptions are made for the simple representations:
+\fxfatal {Clarify the abstraction level on the analytical bounds}
+
+\begin{itemize}
+\item A tree topology is used for data collection.
+\item Broadcast follows the same connections as used when aggregating data towards the concentrator.
+\item Every node in the network generates data.
+\item No collisions occur and transmissions can happen at the same time.
+\item There is no limit to the maximum packet size.
+\item The propagation time of data, $t_p$, is constantly 1 second.
+\item There is no constraint of 10 hops in the data collection.
+\end{itemize}
+
+Worst case and best case topologies are used for a upper and lower bound, respectively. If a tree structure is used for data collection, worst and best case topologies are needed. These are derived by examining different topologies and finding the ones that act like a tree, but result in maximum and minimum amount of hops. A star is basically a tree with all its children in the first level, resulting in minimum hops. A line is a tree with one child in each level, resulting in maximum hops. A binary tree is examined to perform a guess as to how a data collection can perform. The different topologies are seen in figure \ref{fig:tree_structures}, where the concentrator is also depicted to represent the central point for which the data aggregates towards.
+
+\figur{0.7}{tree_structures}{Best case, worst case and a guess of topologies for finding upper and lower bounds.}{fig:tree_structures}
+
+By first looking into the number of transmissions performed for the two approaches, a better understanding of topologies and the data collection time can be achieved. Table \ref{tab:bounds_trans} shows the number of transmissions for the different topologies and approaches. There are cases where, it is not possible to perform both broadcast requests and concatenations while aggregating towards the concentrator. This is the case for a star topology, because there is only one hop to all nodes. A concatenation would at least require children for the first-hop children of the concentrator. In table \ref{tab:bounds_trans} it is shown that the number of transmissions in a binary tree for the sequential approach can be represented by the number of levels, $L$, in the tree.
+
+\begin{table}[H]
+	\centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+%    \multicolumn{4}{|c|}{Number of transmissions}                \\ \hline
+    Approach                  & Star           & Line        & Binary tree      \\ \hline
+    Sequential                & $2{\cdot}(N-1)$    & $(N^2+N)$ & $2{\cdot}\sum\limits_{i=0}^L(i{\cdot}2^i)$ \\ \hline
+    Broadcast                 & $2N-1$ & ~           & ~                \\ \hline
+    Broadcast + concatenation & ~              & $2N-1$    & $2N-1$ \\ \hline
+    \end{tabular}
+    \caption{Number of transmissions, where N is the number of nodes and L is the number of levels.}
+    \label{tab:bounds_trans}
+\end{table}
+
+Figure \ref{fig:analytical_transmissions} shows a plot of the number of transmissions for an increasing network size. A network size of one would only include the concentrator. It is seen that for the approach with broadcasts, the number of transmissions is identical. It is also seen that the upper bound for the number of transmissions is line (sequential), while the lower bound is star (sequential). The only difference between the star (sequential) and any topology using broadcast is one transmission. This is can be seen when comparing broadcast and sequential of the star topology, where the one more transmission is because of all nodes required to re-broadcast once.
+
+\figur{0.6}{analytical_transmissions}{Number of transmissions for increasing network size}{fig:analytical_transmissions}
+
+Now that the bounds for the number of transmissions has been analysed, the bounds for the data collection time can be analysed as well. Table \ref{tab:bounds_time} shows the data collection time, while using different approaches. Figure \ref{fig:analytical_data_collection_time} shows these data collections times in the case, where $t_p = 1 \text{sec}$. The data collection time of the sequential approach results in a scaling given by the propagation time, $t_p$. The data collection time for the broadcast methods are different for the three topologies, where they before had the exact same number of transmissions. The big learning point from analysing the bounds of the data collection time is that for a tree with as many nodes as possible in the levels closer to the concentrator, will result in a faster data collection time.
+
+\begin{table}[H]
+	\centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+%    \multicolumn{4}{|c|}{Data collection time}                \\ \hline
+    Approach                  & Star           & Line        & Binary tree      \\ \hline
+    Sequential                & $2{\cdot}(N-1){\cdot}t_p$    & $(N^2+N){\cdot}t_p$ & $2{\cdot}\sum\limits_{i=0}^L(i{\cdot}2^i){\cdot}t_p$ \\ \hline
+    Broadcast                 & $2{\cdot}t_p$ & ~           & ~                \\ \hline
+    Broadcast + concatenation & ~              & $2{\cdot}N{\cdot}t_p$    & $2{\cdot}{\lceil}\log_2{(\frac{N+1}{2})}{\rceil}{\cdot}t_p$ \\ \hline
+    \end{tabular}
+    \caption{Data collection time, where N is the number of nodes and L is the number of levels.}
+    \label{tab:bounds_time}
+\end{table}
+
+
+\figur{0.6}{analytical_data_collection_time}{Data collection time, where $t_p=1$.}{fig:analytical_data_collection_time}
+
+% derive data collection time for binary tree
+
+For a binary tree there is a relation between the level of a tree and the number of transmissions and the data collection time. For a binary tree the level is equal to $\log_2{(i)}$, where $i$ is the number of nodes in the level. The relation is seen in figure \ref{fig:data_collection_time_tree}.
+
+\figur{0.4}{data_collection_time_tree}{Analysis of a binary tree}{fig:data_collection_time_tree}
+
+Using this relation the data collection time can be computed, because the level describes the number of hops required to reach a node in the tree. Equation \ref{eq:t_binary1} shows the relation between the number of nodes and the data collection time for a binary tree.
+\begin{equation}
+	T_{binary} = 2{\cdot}{\Bigg{\lceil}}\log_2{\left(\frac{N+1}{2}\right)}{\Bigg{\rceil}}{\cdot}t_p
+	\label{eq:t_binary1}
+\end{equation}
+This relation is given by looking at figure \ref{fig:data_collection_time_tree} and seeing that the level is given by $\log_2$ of the total nodes minus the total number of nodes from the previous levels. This relation is seen in equation \ref{eq:t_binary2}.
+\newpage
+\begin{equation}
+	T_{binary}(N=15) = \log_2{(15-7)} = \log_2{(8)} = 3
+	\label{eq:t_binary2}
+\end{equation}
+The total number of nodes in the tree, $N$, can be rewritten as:
+\begin{equation}
+	N = 2^4-1 = 15
+	\label{eq:t_binary3}
+\end{equation}
+Whereas the number of nodes of the previous levels is given by:
+\begin{equation} 
+	\begin{aligned}
+		N_p &= 2^3 - 1 = \frac{2^4}{2}-1 = \frac{16}{2} -1 = 7 \Rightarrow\\
+		N_p &= \frac{N+1}{2} -1
+	\end{aligned}
+	\label{eq:t_binary4}
+\end{equation}
+Using the results from (\ref{eq:t_binary3}) and (\ref{eq:t_binary4}) equation (\ref{eq:t_binary2}) can be formalized as:
+\begin{equation}
+\begin{aligned}
+	T_{binary} &= \log_2{(15-7)} \Rightarrow\\
+    T_{binary} &= \log_2{(N-N_p)} \Leftrightarrow\\
+	T_{binary} &= \log_2{\left(N-\left(\frac{N+1}{2}-1\right)\right)} \Leftrightarrow\\
+	T_{binary} &= \log_2{\left(\frac{2N-(N+1)+2}{2}\right)} \Leftrightarrow\\
+	T_{binary} &= \log_2{\left(\frac{N+1}{2}\right)}
+	\end{aligned}
+\end{equation}
+
+This described the time used to describe one-way through the tree, and is not scaled with a propagation time. Therefore a multiplication with two and scaling with a propagation time will yield the proposed equation for the data collection time for a binary tree given in equation \ref{eq:t_binary1}.
+
+\figur{0.6}{bounds_data_collection_time}{Upper bounds and a guess of a specific tree structure. Upper bound is given by line (Sequential) topology. $t_p = 1 \text{sec}$} {fig:bounds_data_collection_time}
+
+Figure \ref{fig:bounds_data_collection_time} shows the upper bounds of using tree structures together with a guess of a specific tree structure. The upper bound is given by the line topology of both approaches. It gives a basic idea that by using broadcasts for requests and concatenation while aggregating towards the concentrator the data collection time can be reduced significantly. The intersection of the two upper bounds is already seen at a network size of 3 (a network including a concentrator and two nodes).
+
+The chapter gives a basic idea of how different data collection schemes work on different network topologies. As a best case topology a star architecture had been chosen with all nodes in the first hop. The worst case is when the nodes are far away in the network like the specified line topology. However, these topologies seems to be a bit drastic so that it had been decided to include a binary tree to represent a more realistic network but still simple to use. The results are displayed in diagrams, showing that the new data collection approach might be much faster with less transmissions. It could also be seen that a tree structure will serve well as a network topology. Precise details will be extracted from the simulation described in section \ref{sec:simulation_results}, later in this report.
+
+%Star (best case):
+%\begin{equation}
+%n_{req} = N-1\\
+%n_{resp} = N-1\\
+%n_{total} = 2N-2
+%\end{equation}
+%
+%Line (worst case):
+%\begin{equation}
+%n_{req} = N^2+N\\
+%n_{resp} = N-1\\
+%n_{total} = 2N-2
+%\end{equation}
+
+
+% An analysis of upper and lower bound for data collection times is performed to give an indicator for the influence of using the two approaches. Certain assumptions and abstractions made to keep the analytical model simple with very few parameters. The analytical models are very dependent on the specific network given, so there is no generic way of comparing the two approaches without using some specific general networks. Derive worst and best case.
+
+% ASSUMPTIONS
+% assumed broacast follows tree structure -> not the case for simulation
+% assumed no collisions can occur, and transmissions can happen at the same time
+% infinite maximum packet size
+% same propagation time between nodes = 1s
+% trees do not explain setup paths - only data collection paths, which are not constrained by 10 hops -> meaning chain can have >10 hops
+
+
+% Kamstrup & Fast data collection
+% simplified to aspects as, sequential, broadcast, concatenation
+
+% Worst case and best case are needed to find an upper and lower bound
+% Using different tree structures, we can compare worst and best case of number of transmissions and thereby a data collection time
+
+% transmissions:
+% Star is best case - fewest transmissions (show)
+%  is worst case - most transmissions (show)
+% Binary tree is a best guess of a tree structure - should be between (show)
+%	same number of transmissions for ours!
+
+% data collection time:
+% sequential: equal to number of transmissions with multiplied time for propagation
+% different for ours, where they had same number of transmissions!
+
+%\begin{figure}[H]
+%\centering
+%\begin{minipage}{.49\textwidth}
+%\figur{1}{analytical_transmissions}{Number of transmissions}{fig:analytical_transmissions}
+%\end{minipage}
+%\begin{minipage}{.49\textwidth}
+%\figur{1}{analytical_data_collection_time}{Data collection time}{fig:analytical_data_collection_time}
+%\end{minipage}
+%\end{figure}
+
+
+
+
+
+
+
+
+
+
+% SHOWS:
+
+
+% conclusion:
+% compare with data collection time of simulation for both approaches
