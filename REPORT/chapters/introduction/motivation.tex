@@ -28,6 +28,10 @@ The motivation of this Master's Thesis is to take advantage of the new centralis
 %Point \ref{pf4} 
 
 
+%%%%%%%%%%%%%%%%%%%%%%         %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%   Quality of Service   %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%        %%%%%%%%%%%%%%%%%
+
 \section{Quality of Service}
 \label{sec:qos}
 
@@ -90,7 +94,10 @@ MPLS-TE takes advantage of the MPLS labels in order to provide an efficient way 
 
 \subsubsection{MPLS-TE DiffServ Aware (DS-TE)}
 
-MPLS-TE Differential Services Aware (DS-TE) is, as its name says, a MPLS-TE able to detect the DCSP labels.
+MPLS-TE Differential Services Aware (DS-TE) is a MPLS-TE able to detect the DCSP labels.
+
+
+%%%%%%%%%%%%%%%%%%%   END Quality of Service   %%%%%%%%%%%%%
 
 \section{Software-Defined Networking}
 \label{sec:sdn}
@@ -99,25 +106,76 @@ One of the tendencies that seems to have more power for the next generation netw
 
 SDN is a new network architecture that allows be programmed as if it were a computer. It provides an abstraction of the forwarding function decoupling the data plane from control plane, which gives freedom to manage different topologies, protocols without many restrictions from the physical layer.
 
-\figur{0.9}{sdn-arch.png}{SDN architecture (image from Open Networking Foundation)}{fig:sdn-arch}
+\figur{0.6}{sdn-arch.png}{SDN architecture (image from Open Networking Foundation)}{fig:sdn-arch}
+
+\subsubsection{SDN advantages} 
+
+As it's told in this chapter, SDN tries to improve the current networks. Bellow there is a list of the main advantages of SDN architecture.
+
+\begin{description}
+\item[OPEX reduction:] centralised control helps to eliminate manual interaction with the hardware, improving the uptime of the network. 
+\item[CAPEX reduction:] separating the data plane of the control plane brings to a more simple hardware and increases the possibility of more competence between hardware manufacturers, since the devices don't depends on the proprietary software.
+\item[Agility:] since the controller is connected
+\item[Flexibility:]
+\end{description}
+
+
+
+\subsubsection{SDN applications}
+
+To give an idea of how huge SDN is, here is a list with some of the applications 
+
+\begin{enumerate}
+\item \textbf{Appliance Virtualization}
+	\begin{itemize}
+	\item Firewalls, Load balancers, Content distribution, Gateways
+	\end{itemize}
+\item \textbf{Service Assurance}
+	\begin{itemize}
+	\item Content-specific traffic routing for optimal QoE, Congestion control based on network conditions, Dynamic policy-based traffic engineering 
+	\end{itemize}
+\item \textbf{Service Differentiation}
+	\begin{itemize}
+	\item Value-add service features, Bandwidth-on-demand features, BYOD across multiple networks, Service insertion/changing
+	\end{itemize}
+\item \textbf{Service Velocity}
+	\begin{itemize}
+	\item Virtual edge, Distributed app testing environments, Application development workflows 
+	\end{itemize}
+\item \textbf{'Traditional' Control Plane}
+	\begin{itemize}
+	\item Network discovery, Path computation, Optimisation \& maintenance, Protection \& restoration
+	\end{itemize}
+\item \textbf{Network Virtualization}
+	\begin{itemize}
+	\item Virtual network control on shared infrastructure, Multi-tenant network automation \& API
+	\end{itemize}
+\item \textbf{Application Enhancement}
+	\begin{itemize}
+	\item Specific SDN application, Reserved bandwidth for application needs, Geo-distributed applications, Intelligent network responses to app needs
+	\end{itemize}
+\end{enumerate}
+
 
 \subsection{OpenFlow}
 \label{sec:openflow}
 
 OpenFlow is the protocol used to communicate the controller with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.
 
+%%%%%%%%%%%%    COGNITIVE NETWORKS   %%%%%%%%%%%%%%%%%%%
 
-\section{Cognitive Networks}
+%\section{Cognitive Networks}
 
-Another hot topic which should be considered for this project is the concept of Cognitive Networks (CN), since the centralised controller of SDN allow us to sense the environment and act consequently. Looking at the relevant literature, we can find a huge number of definitions of CNs, one of them can be find in a paper written by the Department of Electrical and Computer Engineering at Virginia Tech \cite{cognet-virginia}:
+%Another hot topic which should be considered for this project is the concept of Cognitive Networks (CN), since the centralised controller of SDN allow us to sense the environment and act consequently. Looking at the relevant literature, we can find a huge number of definitions of CNs, one of them can be find in a paper written by the Department of Electrical and Computer Engineering at Virginia Tech \cite{cognet-virginia}:
 
-\emph{A cognitive network has a cognitive process that can perceive current network conditions, and then plan, decide and act on those conditions. The network can learn from these adaptations and use them to make future decisions, all while taking into account end- to-end goals}.
+%\emph{A cognitive network has a cognitive process that can perceive current network conditions, and then plan, decide and act on those conditions. The network can learn from these adaptations and use them to make future decisions, all while taking into account end- to-end goals}.
 
-\figur{0.7}{cog-pro.png}{Cognitive process}{fig:cog-pro}
+%\figur{0.7}{cog-pro.png}{Cognitive process}{fig:cog-pro}
 
-A CN operates in light of end-to-end goals. This means that the scope of the cognitive network is operating above the goals of the individual network elements. Instead, it operates within the scope of a data flow, which may include many network elements. Many flows may traverse a single network element, which means that the cognitive network needs to be able to prioritise these flows. By interacting with the Storage Area Network (SAN), the cognitive network tries to maintain a set of end-to-end goals (such as routing optimisations, connectivity, trust management, etc.) by modifying the elements of the SAN. The cognitive elements associated with each flow are allowed to act selfishly and independently (in the context of the entire network) to achieve local goals.
+%A CN operates in light of end-to-end goals. This means that the scope of the cognitive network is operating above the goals of the individual network elements. Instead, it operates within the scope of a data flow, which may include many network elements. Many flows may traverse a single network element, which means that the cognitive network needs to be able to prioritise these flows. By interacting with the Storage Area Network (SAN), the cognitive network tries to maintain a set of end-to-end goals (such as routing optimisations, connectivity, trust management, etc.) by modifying the elements of the SAN. The cognitive elements associated with each flow are allowed to act selfishly and independently (in the context of the entire network) to achieve local goals.
 
-There are several mechanisms to apply the cognitive concepts to machine learning. The choice of machine learning algorithm depends on what the the network goals are and how these problems are set up. Complex cognitive networks may have several cognition processes operating, each using mechanisms appropriate for the problem being solved.
+%There are several mechanisms to apply the cognitive concepts to machine learning. The choice of machine learning algorithm depends on what the the network goals are and how these problems are set up. Complex cognitive networks may have several cognition processes operating, each using mechanisms appropriate for the problem being solved.
+
 
 %\subsection{Neural Networks}
 
@@ -126,4 +184,4 @@ There are several mechanisms to apply the cognitive concepts to machine learning
 %\subsection{Kalman Filters}
 %\subsection{Learning Automata}
 
-
+%%%%%%%%%%%%   END  COGNITIVE NETWORKS   %%%%%%%%%%%%%%%%%%%
