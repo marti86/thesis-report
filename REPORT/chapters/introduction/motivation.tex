@@ -1,17 +1,17 @@
 \section{Motivation}
 \label{sec:motivation}
 
-In the last 20 years networks requirements have been changing constantly, the amount of traffic have been increasing exponentially and more demanding end-to-end goals are needed. However, the networks architectures have been unchanged, increasing the complexity and hindering its configuration. In order to adapt to the new needs, new network paradigms such as Software-Defined Networking (SDN), cognitive networks or automatic networks are emerging fast due the interests of carriers and ISPs.\\ 
+In the last 20 years networks requirements have been changing constantly, the amount of traffic have been increasing exponentially and more demanding end-to-end goals are needed. However, the networks architectures have been unchanged, increasing the complexity and hindering its configuration. In order to adapt to the new needs, new network paradigms such as Software-Defined Networking (SDN), cognitive networks or automatic networks are emerging fast due the interests of carriers and ISPs.
 
-The first things to analyse are the problems of the existing networks. They have become a barrier to creating new, innovative services within a single data centre, on interconnected data centres, or within enterprises, and an even larger barrier to the continued growth of the Internet.\\
+The first things to analyse are the problems of the existing networks. They have become a barrier to creating new, innovative services within a single data centre, on interconnected data centres, or within enterprises, and an even larger barrier to the continued growth of the Internet.
 
-The main problem in conventional networks (i.e. non SDN), is that each router has to be configured individually because is the same network element (router) who has both, data and control plane. Nowadays there are hundreds of network monitoring and management tools\footnote{\href{http://www.slac.stanford.edu/xorg/nmtf/nmtf-tools.html}{Standford Network Monitoring and Management Tools list.}}, and several protocols to configure the elements such as Multiprotocol Label Switching (MPLS) \footnote{\href{http://www.ietf.org/rfc/rfc3031.txt}{MPLS architecture RFC 3031}} or NETCONF\footnote{\href{http://tools.ietf.org/html/rfc6241}{Network Configuration Protocol (NETCONF) RFC 6241}}. On the other hand, there are also a bunch of routing protocols e.g. Routing Information Protocol (RIP)\footnote{\href{http://tools.ietf.org/html/rfc2453}{RIP Version 2 RFC 2453}}, Enhanced Interior Gateway Routing Protocol (EIGRP)\footnote{\href{http://www.cisco.com/c/en/us/products/ios-nx-os-software/enhanced-interior-gateway-routing-protocol-eigrp/index.html}{CISCO Enhanced Interior Gateway Routing Protocol (EIGRP)}} or Shortest Path Bridging (SPB)\footnote{\href{http://standards.ieee.org/getieee802/download/802.1aq-2012.pdf}{SPB IEEE Std 802.1aq}}. However, with the SDN approach, having a centralised control plane, it's much easier to make a more efficient and dynamic management and control of the network since we have a global overview of the network.\\
+The main problem in conventional networks (i.e. non SDN), is that each router has to be configured individually because is the same network element (router) who has both, data and control plane. Nowadays there are hundreds of network monitoring and management tools\footnote{\href{http://www.slac.stanford.edu/xorg/nmtf/nmtf-tools.html}{Standford Network Monitoring and Management Tools list.}}, and several protocols to configure the elements such as Multiprotocol Label Switching (MPLS) \footnote{\href{http://www.ietf.org/rfc/rfc3031.txt}{MPLS architecture RFC 3031}} or NETCONF\footnote{\href{http://tools.ietf.org/html/rfc6241}{Network Configuration Protocol (NETCONF) RFC 6241}}. On the other hand, there are also a bunch of routing protocols e.g. Routing Information Protocol (RIP)\footnote{\href{http://tools.ietf.org/html/rfc2453}{RIP Version 2 RFC 2453}}, Enhanced Interior Gateway Routing Protocol (EIGRP)\footnote{\href{http://www.cisco.com/c/en/us/products/ios-nx-os-software/enhanced-interior-gateway-routing-protocol-eigrp/index.html}{CISCO Enhanced Interior Gateway Routing Protocol (EIGRP)}} or Shortest Path Bridging (SPB)\footnote{\href{http://standards.ieee.org/getieee802/download/802.1aq-2012.pdf}{SPB IEEE Std 802.1aq}}. However, with the SDN approach, having a centralised control plane, it's much easier to make a more efficient and dynamic management and control of the network since we have a global overview of the network.
 
 %Open Shortest Path First (OSPF)\footnote{\href{http://tools.ietf.org/html/rfc5340}{OSPF for IPv6 RFC 5340}}
 
 Protocols tend to be defined in isolation, however, with each solving a specific problem and without the benefit of any fundamental abstractions. This has resulted in one of the primary limitations of today's networks: complexity. For example, to add or move any device, IT must touch 
 multiple switches, routers, firewalls, Web authentication portals, etc. and update ACLs, VLANs, Quality of Services (QoS), and other protocol-based mechanisms using device-level management tools. In addition, network topology, vendor switch model, and software version all must be taken into 
-account. Due to this complexity, today's networks are relatively static as IT seeks to minimise the risk of service disruption.\\
+account. Due to this complexity, today's networks are relatively static as IT seeks to minimise the risk of service disruption.
 
 The motivation of this Master's Thesis is to take advantage of the new centralised networking approach of SDN to dynamically allocate the appropriated resources (appropriated QoS) to each sort of service or user.    
 
@@ -35,7 +35,7 @@ The motivation of this Master's Thesis is to take advantage of the new centralis
 \section{Quality of Service}
 \label{sec:qos}
 
-Nowadays networking QoS can be divided in 3 classes, Best Effort (BE), Integrated Services (IntServ) and Differentiated Services (DiffServ). Each of this approaches have their own positive and negative things. This sections give a general overview of each in order to understand the problems and the current methods to achieve end-to-end goals, dealing with the different kind of packets.\\ 
+Nowadays networking QoS can be divided in 3 classes, Best Effort (BE), Integrated Services (IntServ) and Differentiated Services (DiffServ). Each of this approaches have their own positive and negative things. This sections give a general overview of each in order to understand the problems and the current methods to achieve end-to-end goals, dealing with the different kind of packets.
 
 Table \ref{table:qosComp} summarises the features of this three types of QoS, specifying the service, service scope, complexity and scalability of each one.
 
@@ -60,16 +60,16 @@ Scalability & Highly scalable, nodes maintain only routing state & Not scalable 
 \subsection{Best Effort}
 \label{sec:be}
 
-Best Effort is the current way the Internet is working, and is equal to do nothing with the packets, meaning that the service provided depends on the actual state of the network.\\
+Best Effort is the current way the Internet is working, and is equal to do nothing with the packets, meaning that the service provided depends on the actual state of the network.
 
 The positive points about BE is that is highly scalable, since the nodes just maintain routing state, and there is no need of any set-up. On the other hand this approach has no assurances about delivery, no control access, no isolation and no guarantees. 
 
 \subsection{Integrated Services}
 \label{sec:intserv}
 
-Integrated Services guarantees specific resources for a specific flow, which means that can guarantee a QoS for the flow. IntServ uses the Resource Reservation Protocol (RSVP)\footnote{\href{http://tools.ietf.org/html/rfc2205}{Resource ReSerVation Protocol (RSVP) RFC 2205.}} as a signalling protocol, which is the responsible of sending specific messages to the network nodes to reserve the required resources per each data stream. RSVP declares the QoS requirements and characterise the traffic of the the flow. \\
+Integrated Services guarantees specific resources for a specific flow, which means that can guarantee a QoS for the flow. IntServ uses the Resource Reservation Protocol (RSVP)\footnote{\href{http://tools.ietf.org/html/rfc2205}{Resource ReSerVation Protocol (RSVP) RFC 2205.}} as a signalling protocol, which is the responsible of sending specific messages to the network nodes to reserve the required resources per each data stream. RSVP declares the QoS requirements and characterise the traffic of the the flow. 
 
-IntServ allow to differentiate three kinds of services: Guaranteed (real-time applications), Controlled load (applications that can adapt to network conditions within a certain performance window) and Best effort.\\
+IntServ allow to differentiate three kinds of services: Guaranteed (real-time applications), Controlled load (applications that can adapt to network conditions within a certain performance window) and Best effort.
 
 
 
@@ -78,7 +78,7 @@ Even though IntServ ensures the specific QoS required per each flow, it has larg
 \subsection{Differential Services}
 \label{sec:diffserv}
 
-Due the limitations of IntServ (\ref{sec:intserv}), DiffServ appeared solving some of the problems. DiffServ consist on marking the packets with a priority stamp (Differenciated Service Code Point or DSCP) on the edge routers, and the core networks use this stamp to know the forwarding priority. Doing this labelling suppose time, but since it is done in the edge routers, where the links speed are slower, it doesn't represent a problem.\\
+Due the limitations of IntServ (\ref{sec:intserv}), DiffServ appeared solving some of the problems. DiffServ consist on marking the packets with a priority stamp (Differenciated Service Code Point or DSCP) on the edge routers, and the core networks use this stamp to know the forwarding priority. Doing this labelling suppose time, but since it is done in the edge routers, where the links speed are slower, it doesn't represent a problem.
 
 The advantage of DiffServ is that scalable, since it doesn't require the routers to maintain state information for each flow, which is a huge burden for the routers. However, it also has problems. One is that since the packets are marked just at the edge routers, it can not solve the congestion inside the domain, so it cannot provide per flow bandwidth and delay guarantees. For example, a lot of flows in the same class can be routed through the same link, thus cause congestion there.
 
@@ -102,15 +102,26 @@ MPLS-TE Differential Services Aware (DS-TE) is a MPLS-TE able to detect the DCSP
 \section{Software-Defined Networking}
 \label{sec:sdn}
 
-One of the tendencies that seems to have more power for the next generation networking is Software-Defined Networking (SDN). One of the reasons to believe that SDN will be \emph{the one} is that some big companies, such as Google, are already using it\footnote{\href{http://goo.gl/F6sBR}{Google's white paper: Inter-Datacenter WAN with centralised using SDN and OpenFlow.}} \footnote{\href{http://cseweb.ucsd.edu/~vahdat/papers/b4-sigcomm13.pdf}{B4: Experience with a Globally-Deployed Software Defined WAN.}}.\\
+One of the tendencies that seems to have more power for the next generation networking is Software-Defined Networking (SDN). One of the reasons to believe that SDN will be \emph{the one} is that some big companies, such as Google, are already using it\footnote{\href{http://goo.gl/F6sBR}{Google's white paper: Inter-Datacenter WAN with centralised using SDN and OpenFlow.}} \footnote{\href{http://cseweb.ucsd.edu/~vahdat/papers/b4-sigcomm13.pdf}{B4: Experience with a Globally-Deployed Software Defined WAN.}}.
 
 SDN is a new network architecture that allows be programmed as if it were a computer. It provides an abstraction of the forwarding function decoupling the data plane from control plane, which gives freedom to manage different topologies, protocols without many restrictions from the physical layer.
 
+As it is explained in section \ref{sec:motivation}, the main problem of the current networks is that the control plane has no abstractions. That means that there is no modularity, which leads to limited functionality, since protocols with different proposals (such as routing, isolation or traffic engineering) coexist in the same layer. SDN was designed to change that paradigm, dividing the control plane in three main layers: the forwarding model, the Network Operating System (NOS) and the control program.
+
+\begin{description}
+\item[Forwarding model:] composed by the Network Elements (i.e. switches) and a dedicated communicated channel from each NE with the NOS which uses a standard way of defining the forwarding state.  
+\item[Network Operation System:] piece of software running in servers (controllers) which provides information about the current state of the network such as the topology or the state of each port. 
+\item[Control program:] express the operator goals, and compute the forwarding state of each NE to accomplish those goals.
+\end{description}
+
+
 \figur{0.6}{sdn-arch.png}{SDN architecture (image from Open Networking Foundation)}{fig:sdn-arch}
 
-\subsubsection{SDN advantages} 
 
-As it's told in this chapter, SDN tries to improve the current networks. Bellow there is a list of the main advantages of SDN architecture.
+
+\subsection{SDN advantages} 
+
+SDN tries to improve the current networks. Bellow there is a list of the main advantages of the SDN paradigm.
 
 \begin{description}
 \item[OPEX reduction:] centralised control helps to eliminate manual interaction with the hardware, improving the uptime of the network. 
@@ -121,7 +132,7 @@ As it's told in this chapter, SDN tries to improve the current networks. Bellow 
 
 
 
-\subsubsection{SDN applications}
+\subsection{SDN applications}
 
 To give an idea of how huge SDN is, here is a list with some of the applications 
 
@@ -160,7 +171,7 @@ To give an idea of how huge SDN is, here is a list with some of the applications
 \subsection{OpenFlow}
 \label{sec:openflow}
 
-OpenFlow is the protocol used to communicate the controller with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.
+OpenFlow is the protocol used to communicate the NOS (controller) with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.
 
 %%%%%%%%%%%%    COGNITIVE NETWORKS   %%%%%%%%%%%%%%%%%%%
 

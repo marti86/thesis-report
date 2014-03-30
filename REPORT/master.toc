@@ -8,10 +8,10 @@
 \contentsline {subsection}{\numberline {1.2.4}MPLS Traffic Engineering (MPLS-TE)}{3}{subsection.1.2.4}
 \contentsline {subsubsection}{MPLS-TE DiffServ Aware (DS-TE)}{4}{subsubsection*.4}
 \contentsline {section}{\numberline {1.3}Software-Defined Networking}{4}{section.1.3}
-\contentsline {subsubsection}{SDN advantages}{5}{subsubsection*.6}
-\contentsline {subsubsection}{SDN applications}{5}{subsubsection*.7}
-\contentsline {subsection}{\numberline {1.3.1}OpenFlow}{6}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.1}SDN advantages}{5}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}SDN applications}{5}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}OpenFlow}{6}{subsection.1.3.3}
 \contentsline {section}{\numberline {1.4}Problem formulation}{6}{section.1.4}
-\contentsline {chapter}{Bibliography}{7}{chapter*.8}
+\contentsline {chapter}{Bibliography}{7}{chapter*.6}
 \setcounter {tocdepth}{0}
 \contentsline {chapter}{\numberline {A}Project proposal}{9}{appendix.A}
