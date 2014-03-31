@@ -1,0 +1,25 @@
+\section{Traffic characterisation}
+\label{sec:traf-char}
+
+In order to provide the appropriate quality for each service, a traffic characterisation is needed. This section gives a global overview of the requirements of three different sorts of traffic: voice, video and web-browser. 
+
+The International Telecommunication Union (ITU) \cite{ituG1010} 
+
+\figur{1}{introduction/traf-char.png}{QoS requirements (ITU-T Rec. G.1010)}{fig:traf-char}
+
+\begin{table}[ht] 
+\caption{Performance targets for voice, video and web-browser applications} % title of Table 
+\centering % used for centering table 
+\begin{tabular}{c || c c c} % centered columns (4 columns) 
+\hline\hline %inserts double horizontal lines 
+  & Voice & Video & Web-browser \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+Loss \% & 3 & 1 & 0 \\   \hline % inserting body of the table 
+Jitter (ms) & 10 & 30 & 0 \\   \hline
+Delay (ms) & 150 & 150 & 10000 \\   \hline
+Typical datarates & 64 Kbps & 128 Kbps & NA \\ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\label{table:trafchar} % is used to refer this table in the text 
+\end{table}

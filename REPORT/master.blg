@@ -2,50 +2,52 @@ This is BibTeX, Version 0.99d (TeX Live 2010)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: master.aux
 The style file: apalike.bst
-Illegal, another \bibstyle command---line 42 of file master.aux
+Illegal, another \bibstyle command---line 66 of file master.aux
  : \bibstyle
  :          {plain}
 I'm skipping whatever remains of this command
 Database file #1: bib/mybib.bib
+Warning--to sort, need author or key in ituG1010
+Warning--empty author in ituG1010
 You've used 1 entry,
             1935 wiz_defined-function locations,
-            477 strings with 3827 characters,
-and the built_in function-call counts, 279 in all, are:
-= -- 27
-> -- 7
+            477 strings with 3781 characters,
+and the built_in function-call counts, 245 in all, are:
+= -- 22
+> -- 0
 < -- 1
-+ -- 2
-- -- 2
-* -- 16
-:= -- 60
++ -- 0
+- -- 0
+* -- 21
+:= -- 43
 add.period$ -- 3
 call.type$ -- 1
-change.case$ -- 7
+change.case$ -- 5
 chr.to.int$ -- 1
-cite$ -- 1
-duplicate$ -- 11
-empty$ -- 19
-format.name$ -- 3
-if$ -- 50
+cite$ -- 4
+duplicate$ -- 12
+empty$ -- 22
+format.name$ -- 0
+if$ -- 45
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 0
 newline$ -- 8
-num.names$ -- 3
-pop$ -- 4
+num.names$ -- 0
+pop$ -- 5
 preamble$ -- 1
-purify$ -- 6
+purify$ -- 5
 quote$ -- 0
-skip$ -- 10
+skip$ -- 8
 stack$ -- 0
-substring$ -- 12
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 13
+swap$ -- 1
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 6
-warning$ -- 0
-while$ -- 2
+warning$ -- 2
+while$ -- 0
 width$ -- 0
-write$ -- 15
+write$ -- 14
 (There was 1 error message)
