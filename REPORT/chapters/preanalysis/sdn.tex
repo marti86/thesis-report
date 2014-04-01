@@ -1,11 +1,14 @@
 \section{Software-Defined Networking}
 \label{sec:sdn}
 
-One of the tendencies that seems to have more power for the next generation networking is Software-Defined Networking (SDN). One of the reasons to believe that SDN will be \emph{the one} is that some big companies, such as Google, are already using it\footnote{\href{http://goo.gl/F6sBR}{Google's white paper: Inter-Datacenter WAN with centralised using SDN and OpenFlow.}} \footnote{\href{http://cseweb.ucsd.edu/~vahdat/papers/b4-sigcomm13.pdf}{B4: Experience with a Globally-Deployed Software Defined WAN.}}.
+One of the tendencies that seems to have more power for the next generation networking is Software-Defined Networking (SDN). One of the reasons to believe that SDN will be \emph{the one} is that some big companies, such as Google, are already using it.\cite{GoogleB4}\cite{GoogleWP}.\\
 
-SDN is a new network architecture that allows be programmed as if it were a computer. It provides an abstraction of the forwarding function decoupling the data plane from control plane, which gives freedom to manage different topologies, protocols without many restrictions from the physical layer.
+%\footnote{\href{http://goo.gl/F6sBR}{Google's white paper: Inter-Datacenter WAN with centralised using SDN and OpenFlow.}} 
+%\footnote{\href{http://cseweb.ucsd.edu/~vahdat/papers/b4-sigcomm13.pdf}{B4: Experience with a Globally-Deployed Software Defined WAN.}}
 
-As it is explained in section \ref{sec:motivation}, the main problem of the current networks is that the control plane has no abstractions. That means that there is no modularity, which leads to limited functionality, since protocols with different proposals (such as routing, isolation or traffic engineering) coexist in the same layer. SDN was designed to change that paradigm, dividing the control plane in three main layers: the forwarding model, the Network Operating System (NOS) and the control program.
+SDN is a new network architecture that allows be programmed as if it were a computer. It provides an abstraction of the forwarding function decoupling the data plane from control plane, which gives freedom to manage different topologies, protocols without many restrictions from the physical layer.\\
+
+As it is explained in section \ref{sec:motivation}, the main problem of the current networks is that the control plane has no abstractions. That means that there is no modularity, which leads to limited functionality, since protocols with different proposals (such as routing, isolation or traffic engineering) coexist in the same layer. SDN was designed to change that paradigm, dividing the control plane in three main layers: the forwarding model, the Network Operating System (NOS) and the control program.\\
 
 \begin{description}
 \item[Forwarding model:] composed by the Network Elements (i.e. switches) and a dedicated communicated channel from each NE with the NOS which uses a standard way of defining the forwarding state.  
@@ -18,22 +21,22 @@ As it is explained in section \ref{sec:motivation}, the main problem of the curr
 
 
 
-\subsection{SDN advantages} 
+\subsection{SDN advantages\\}
 
-SDN tries to improve the current networks. Bellow there is a list of the main advantages of the SDN paradigm.
+SDN tries to improve the current networks. Bellow there is a list of the main advantages of the SDN paradigm.\\
 
 \begin{description}
 \item[OPEX reduction:] centralised control helps to eliminate manual interaction with the hardware, improving the uptime of the network. 
 \item[CAPEX reduction:] separating the data plane of the control plane brings to a more simple hardware and increases the possibility of more competence between hardware manufacturers, since the devices don't depends on the proprietary software.
 \item[Agility:] since the control layer can interact constantly with the infrastructure layer, the behaviour of the network can adapt fast to changes like failures or new traffic patterns. 
-\item[Flexibility:] having a separated abstraction for the control program allows to express different operator goals, adapting to a specific objectives. Operators can implement features in software they control, rather than having to wait for a vendor to add it in their proprietary products.
+\item[Flexibility:] having a separated abstraction for the control program allows to express different operator goals, adapting to a specific objectives. Operators can implement features in software they control, rather than having to wait for a vendor to add it in their proprietary products.\\
 \end{description}
 
 
 
-\subsection{SDN applications}
+\subsection{SDN applications\\}
 
-To give an idea of how huge SDN is, here is a list with some of the applications 
+To give an idea of how huge SDN is, the list below mentioned some of the applications which is related to.\\
 
 \begin{enumerate}
 \item \textbf{Appliance Virtualization}
@@ -62,14 +65,14 @@ To give an idea of how huge SDN is, here is a list with some of the applications
 	\end{itemize}
 \item \textbf{Application Enhancement}
 	\begin{itemize}
-	\item Specific SDN application, Reserved bandwidth for application needs, Geo-distributed applications, Intelligent network responses to app needs
+	\item Specific SDN application, Reserved bandwidth for application needs, Geo-distributed applications, Intelligent network responses to app needs.\\
 	\end{itemize}
 \end{enumerate}
 
 
-\subsection{OpenFlow}
+\subsection{OpenFlow\\}
 \label{sec:openflow}
 
-OpenFlow is the protocol used to communicate the NOS (controller) with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.
+OpenFlow is the protocol used to communicate the NOS (controller) with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.\\
 
-OpenFlow is the most common protocol used nowadays, and is often confused with the SDN concept itself, but they are different things. While SDN is the architecture dividing the layers, OpenFlow is just a protocol proposed to convey the messages from the control layer to the network elements.
+OpenFlow is the most common protocol used in SDN networks, and is often confused with the SDN concept itself, but they are different things. While SDN is the architecture dividing the layers, OpenFlow is just a protocol proposed to convey the messages from the control layer to the network elements.\\

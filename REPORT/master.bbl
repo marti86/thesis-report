@@ -6,4 +6,14 @@
 \newblock Technical Report ITU-T Rec. G.1010, International Telecommunication
   Union.
 
+\bibitem[Goo, 2012]{GoogleWP}
+ (2012).
+\newblock Inter-datacenter wan with centralized te using sdn and openflow.
+\newblock White paper, Google, Inc.
+
+\bibitem[Sushant~Jain, 2013]{GoogleB4}
+Sushant~Jain, Alok~Kumar, S.~M. (2013).
+\newblock B4: Experience with a globally-deployed software defined wan.
+\newblock Technical report, Google Inc.
+
 \end{thebibliography}

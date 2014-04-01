@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2012.4.23)  31 MAR 2014 17:31
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2012.4.23)  1 APR 2014 05:16
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1663,92 +1663,247 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--32
 Chapter 1.
 (./chapters/introduction/motivation.tex
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 8.
+(Font)              <9> on input line 10.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 8.
+(Font)              <5> on input line 10.
  [1
 
 
 ])
-(./chapters/introduction/problemformulation.tex))
-(./chapters/preanalysis/preanalysis.tex [2]
-Chapter 2.
-(./chapters/preanalysis/qos.tex [3
+(./chapters/introduction/problemformulation.tex [2]
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+
+ []
+
+)) (./chapters/preanalysis/preanalysis.tex [3] [4
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 31--31
+Chapter 2.
+(./chapters/preanalysis/qos.tex
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--16
+
+ []
+
+[5]
+Overfull \hbox (0.9437pt too wide) in paragraph at lines 18--19
+\T1/lmr/m/n/10.95 Guar-an-teed Ser-vices (IntServ) and Dif-fer-en-ti-ated Ser-v
+ices (Diff-Serv and MPLS-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 18--19
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
 []|\T1/lmr/m/n/10.95 Connectivity
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 31--31
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
 \T1/lmr/m/n/10.95 No iso-la-tion
  []
 
 
-Underfull \hbox (badness 5119) in paragraph at lines 31--31
+Underfull \hbox (badness 5119) in paragraph at lines 30--30
 []|\T1/lmr/m/n/10.95 Per flow iso-la-tion,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--34
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
 []|\T1/lmr/m/n/10.95 Highly scal-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--34
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
 \T1/lmr/m/n/10.95 able, nodes
  []
 
 
-Underfull \hbox (badness 1845) in paragraph at lines 34--34
+Underfull \hbox (badness 1845) in paragraph at lines 33--33
 \T1/lmr/m/n/10.95 main-tain only
  []
 
 
-Underfull \hbox (badness 3482) in paragraph at lines 34--34
+Underfull \hbox (badness 3482) in paragraph at lines 33--33
 []|\T1/lmr/m/n/10.95 Not scal-able (each
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--34
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
 []|\T1/lmr/m/n/10.95 Scalable (edge routers
  []
 
 
-Underfull \hbox (badness 4454) in paragraph at lines 34--34
+Underfull \hbox (badness 4454) in paragraph at lines 33--33
 \T1/lmr/m/n/10.95 main-tains per ag-gre-gate
  []
 
-<figures/introduction/qos-levels.png, id=158, 417.56pt x 281.05pt>
+<figures/introduction/qos-levels.png, id=172, 417.56pt x 281.05pt>
 File: figures/introduction/qos-levels.png Graphic file (type png)
 
-<use figures/introduction/qos-levels.png> [4 <./figures/introduction/qos-levels
-.png (PNG copy)>] [5]) (./chapters/preanalysis/trafcar.tex
-<figures/introduction/traf-char.png, id=179, 945.5325pt x 434.62375pt>
+<use figures/introduction/qos-levels.png>
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
+
+ []
+
+[6 <./figures/introduction/qos-levels.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 72--73
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--81
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
+
+ []
+
+[8]) (./chapters/preanalysis/trafcar.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--5
+
+ []
+
+
+Overfull \hbox (2.08081pt too wide) in paragraph at lines 6--7
+[]\T1/lmr/m/n/10.95 The In-ter-na-tional Telecom-mu-ni-ca-tion Union, Telecom-m
+u-ni-ca-tion Stan-dard-
+ []
+
+<figures/introduction/traf-char.png, id=200, 945.5325pt x 434.62375pt>
 File: figures/introduction/traf-char.png Graphic file (type png)
 
-<use figures/introduction/traf-char.png>) (./chapters/preanalysis/sdn.tex
-[6 <./figures/introduction/traf-char.png (PNG copy)>]
-<figures/introduction/sdn-arch.png, id=192, 434.5836pt x 339.1872pt>
+<use figures/introduction/traf-char.png>
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+
+ []
+
+[9 <./figures/introduction/traf-char.png (PNG copy)>])
+(./chapters/preanalysis/sdn.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--5
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--10
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--12
+
+ []
+
+
+Overfull \hbox (11.09616pt too wide) in paragraph at lines 15--16
+[]\T1/lmr/m/n/10.95 piece of soft-ware run-ning in servers (con-trollers)
+ []
+
+<figures/introduction/sdn-arch.png, id=218, 434.5836pt x 339.1872pt>
 File: figures/introduction/sdn-arch.png Graphic file (type png)
 
-<use figures/introduction/sdn-arch.png> [7]
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 41.
+<use figures/introduction/sdn-arch.png> [10]
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--33
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 44.
 (/usr/local/texlive/2010/texmf-dist/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 41.
- [8 <./figures/introduction/sdn-arch.png>])) (./master.bbl [9] [10
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 44.
+ [11 <./figures/introduction/sdn-arch.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
 
-]) (./appendix/appendix.tex
-[11] [12
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+
+ []
+
+)
+Underfull \hbox (badness 10000) in paragraph at lines 78--10
+
+ []
+
+) (./master.bbl [12]) (./appendix/appendix.tex [13
+
+] [14
 
 ]
 Appendix A.
-) AED: lastpage setting LastPage [13]
+) AED: lastpage setting LastPage [15]
 
 FiXme Summary: Number of notes: 0,
 (FiXme)        Number of warnings: 0,
@@ -1761,16 +1916,16 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 72.
 (./master.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 72.
 Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: F8DF574A0EF00639DDD892301BD33DD9;356.
+(rerunfilecheck)             Checksum: 72D0F35E5732024A9896B4A54BFD0063;357.
  ) 
 Here is how much of TeX's memory you used:
- 24232 strings out of 493747
- 418571 string characters out of 3143546
- 629414 words of memory out of 3000000
- 26763 multiletter control sequences out of 15000+200000
+ 24243 strings out of 493747
+ 418728 string characters out of 3143546
+ 630413 words of memory out of 3000000
+ 26769 multiletter control sequences out of 15000+200000
  92922 words of font info for 76 fonts, out of 3000000 for 9000
  729 hyphenation exceptions out of 8191
- 49i,15n,78p,1575b,601s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 49i,15n,78p,1102b,614s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2010/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
 cal/texlive/2010/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/20
 10/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}</usr/local/texlive/2010/texmf-dist/
@@ -1785,10 +1940,10 @@ t/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2010/texmf-dist/fonts/type
 m/lmri9.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/lm/lmss10.pf
 b></usr/local/texlive/2010/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/
 local/texlive/2010/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on master.pdf (19 pages, 549671 bytes).
+Output written on master.pdf (21 pages, 555264 bytes).
 PDF statistics:
- 299 PDF objects out of 1000 (max. 8388607)
- 241 compressed objects within 3 object streams
- 65 named destinations out of 1000 (max. 500000)
+ 321 PDF objects out of 1000 (max. 8388607)
+ 261 compressed objects within 3 object streams
+ 70 named destinations out of 1000 (max. 500000)
  185 words of extra memory for PDF output out of 10000 (max. 10000000)
 
