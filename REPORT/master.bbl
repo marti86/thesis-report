@@ -1,15 +1,30 @@
 \begin{thebibliography}{}
 
-\bibitem[itu, 2001]{ituG1010}
- (2001).
-\newblock End-user multimedia qos categories.
-\newblock Technical Report ITU-T Rec. G.1010, International Telecommunication
-  Union.
+\bibitem[ope, 2009]{openflow}
+ (2009).
+\newblock Openflow switch specification.
+\newblock Technical report, Open Networking Foundation.
 
 \bibitem[Goo, 2012]{GoogleWP}
  (2012).
 \newblock Inter-datacenter wan with centralized te using sdn and openflow.
 \newblock White paper, Google, Inc.
+
+\bibitem[Awduche et~al., 2002]{rfc3272}
+Awduche, D., Chiu, A., Elwalid, A., Widjaja, I., and Xiao, X. (2002).
+\newblock Overview and principles of inter- net traffic engineering.
+\newblock RFC 3272 (Informational).
+
+\bibitem[Fortz and Thorup, 2000]{ospfW}
+Fortz, B. and Thorup, M. (2000).
+\newblock Internet traffic engineering by optimizing ospf weights.
+\newblock In {\em INFOCOM 2000. Nineteenth Annual Joint Conference of the IEEE
+  Computer and Communications Societies. Proceedings. IEEE}, volume~2, pages
+  519--528.
+
+\bibitem[Katz, 2003]{rfc3630}
+Katz, D.~Kompella, K. Y.~D. (2003).
+\newblock Traffic engineering (te) extensions to ospf version 2.
 
 \bibitem[Sushant~Jain, 2013]{GoogleB4}
 Sushant~Jain, Alok~Kumar, S.~M. (2013).

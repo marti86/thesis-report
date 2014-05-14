@@ -1,4 +1,84 @@
-\chapter{Project proposal}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%					MININET & FLOODLIGHT							%
+%																%
+%																%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\chapter{Setting up Mininet and Floodlight}
+
+\textit{In order to simulate the scenario with SDN, this project uses Mininet\footnote{\href{http://mininet.org/}{Mininet website: http://mininet.org}} software, which is developed by Stanford University and released under a permissive BSD Open Source license, to simulate the network. And Floodlight\footnote{\href{http://www.projectfloodlight.org/floodlight/}{Floodlight website: www.projectfloodlight.org/floodlight}} as a controller of the network. Others software tools used are Virtual Box\footnote{\href{https://www.virtualbox.org}{VirtualBox website: www.virtualbox.org}} to run the Mininet virtual network and Eclipse\footnote{\href{https://www.eclipse.org}{Eclipse website: www.eclipse.org}} as a IDE. This appendix explains the steps needed in order to setting up the environment needed for the study.} 
+
+
+\section{Mininet}
+
+\begin{enumerate}
+\item The easiest and recommended way to setting up mininet is downloading a Virtual Machine (VM) image, which is provided in the following link:  \emph{\underline{\href{https://bitbucket.org/mininet/mininet-vm-images/downloads}{Mininet 2.1.0}}}.
+\item Open VirtualBox and create a new VM Ubuntu type and use the download file in the previous step as a virtual hard disk for the new VM.
+\item Select "\emph{settings}", and add an additional host-only network adapter so that you can log in to the VM image.
+\item Run the new VM.
+\item 
+\begin{description}
+\item[Login:] mininet
+\item[Password:] mininet 
+\end{description}
+\item Start Mininet with the command "\emph{sudo mn}". In the case we want to load a specific topology and connect Mininet to the controller,  we have to add some parameters to that command. To load the topology specify in the file \emph{topo.py} and connect to the controller which is running in the host with the IP: \emph{172.26.20.23} the command will be the following:\\   
+
+\begin{verbatim}
+sudo mn --custom topo.py --topo mytopo --controller remote,ip=
+172.26.20.23,port=6633
+
+\end{verbatim}
+
+\item For further information about Mininet and how to use it go to: \href{http://mininet.org/walkthrough/#part-1-everyday-mininet-usage}{Mininet Walkthrough page}.
+
+\end{enumerate}
+
+
+\section {Floodlight}
+
+Floodlight is an open-source software which source code is published on GitHub: \\\underline{\href{https://github.com/floodlight/floodlight}{github.com/floodlight/floodlight}}. However, in order to add new modules it is easier to use a Integrated Development Environment (IDE) such as Eclipse. The following steps are needed in order to download Floodlight and integrate it with Eclipse.\\
+
+\begin{enumerate}
+\item Type the following commands:\\
+
+\begin{verbatim}
+sudo apt-get install build-essential default-jdk ant python-dev eclipse
+git clone git://github.com/floodlight/floodlight.git
+cd floodlight
+ant eclipse
+
+\end{verbatim}
+
+\item Launch Eclipse
+\item "File" $\rightarrow$ "Import" $\rightarrow$ "General" $\rightarrow$ "Existing Projects into Workspace" $\rightarrow$ "Next" 
+\item From "Select root directory" click "Browse" and select the parent directory where you placed floodlight. $\rightarrow$ click "Finish"
+\item Create the FloodlightLaunch target:
+	\begin{enumerate}
+	\item Click "Run"   $\rightarrow$ "Run Configurations"
+	\item Right Click on "Java Application"  $\rightarrow$ "New"
+		\begin{enumerate}
+		\item For "Name" use \emph{"FloodlightLauncher"}
+		\item For "Project" use \emph{"Floodlight}
+		\item For "Main" use \emph{"net.floodlightcontroller.core.Main"}
+		\end{enumerate}
+	\item Click "Apply"
+	\end{enumerate}
+\end{enumerate}
+ 
+\subsection{Adding a module to Floodlight}
+
+In order to add a module with new functionalities, it is needed to change the default startup modules:\\
+\begin{verbatim}src/main/resources/floodlightdefault.properties
+src/main/resources/META-INF/services/net.floodlight.core.module.IFloodlightModule
+
+\end{verbatim}
+
+Adding the new class created. 
+
+
+
+
 
 %\vspace{-50pt}
 %\begin{figure}[H]
