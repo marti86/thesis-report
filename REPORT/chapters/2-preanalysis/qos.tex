@@ -1,0 +1,87 @@
+%%%%%%%%%%%%%%%%%%%%%%         %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%   Quality of Service   %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%        %%%%%%%%%%%%%%%%%
+
+\section{Quality of Service (QoS)}
+\label{sec:qos}
+
+Quality of Service (QoS) refers to prioritise a specific sort of traffic in front of another. This is an important factor in order to adapt to different traffic models, and to provide a good Quality of Experience (QoE) to the end-user.\\
+
+Fundamentally, QoS enables you to provide better service to certain flows. This is done by either raising the priority of a flow or limiting the priority of another flow. When using congestion-management tools, you try to raise the priority of a flow by queuing and servicing queues in different ways. The queue management tool used for congestion avoidance raises priority by dropping lower-priority flows before higher-priority flows. Policing and shaping provide priority to a flow by limiting the throughput of other flows. Link efficiency tools limit large flows to show a preference for small flows. There are three main parameters to determine what is the QoS requirements for each service:\\
+
+\begin{description}
+\item[Delay:] it manifests itself in a number of ways, including the time taken to establish a particular service from the initial user request and the time to receive specific information once the service is established. Delay has a very direct impact on user satisfaction depending on the application, and includes delays in the terminal, network, and any servers. 
+\item[Jitter:] delay variation is generally included as a performance parameter since it is very important at the transport layer in packetised data systems due to the inherent variability in arrival times of individual packets. However, services that are highly intolerant of delay variation (such as voice) will usually take steps to remove (or at least significantly reduce) the delay variation by means of buffering, effectively eliminating delay variation as perceived at the user level (although at the expense of adding additional fixed delay). 
+\item[Loss packets:] has a very direct effect on the quality of service finally presented to the user, whether it be voice, image, video or data. In this context, information loss is not limited to the effects of bit errors or packet loss during transmission, but also includes the effects of any degradation introduced by media coding for more efficient transmission.\\
+\end{description} 
+   
+Nowadays networking QoS can be divided in 3 classes, Best Effort (BE), Guaranteed Services (IntServ) and Differentiated Services (DiffServ and MPLS-TE). Each of this approaches have their own positive and negative things. This sections give a general overview of each in order to understand the problems and the current methods to achieve end-to-end goals, dealing with the different kind of packets.\\
+
+Table \ref{table:qosComp} summarises the features of this three types of QoS, specifying the service, service scope, complexity and scalability of each one.
+
+\begin{table}[ht] 
+\caption{QoS comparison} % title of Table 
+\centering % used for centering table 
+\begin{tabular}{c || p{2.5cm} p{3.5cm} p{4.5cm}} % centered columns (4 columns) 
+\hline\hline %inserts double horizontal lines 
+  & Best-Effort & Guaranteed & Differentiated \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+Service & Connectivity No isolation  No guarantees & Per flow isolation, Per flow guarantee & Per aggregation isolation, Per aggregation guarantee \\   \hline % inserting body of the table 
+Service Scope & End-to-end & End-to-end & Domain \\   \hline
+Complexity & No setup & Per flow setup & Long term setup \\   \hline
+Scalability & Highly scalable, nodes maintain only routing state & Not scalable (each router maintains per flow state) & Scalable (edge routers maintains per aggregate state and core routers per class state) \\ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\label{table:qosComp} % is used to refer this table in the text 
+\end{table}
+
+Figure \ref{fig:qos-levels} represents the three levels of QoS mentioned above.
+
+\figur{0.6}{introduction/qos-levels.png}{QoS levels representation}{fig:qos-levels}
+
+\subsection{Best Effort}
+\label{sec:be}
+
+Best Effort is the current way the Internet is working, and is equal to do nothing with the packets, meaning that the service provided depends on the actual state of the network.\\
+
+The positive points about BE is that is highly scalable, since the nodes just maintain routing state, and there is no need of any set-up. On the other hand this approach has no assurances about delivery, no control access, no isolation and no guarantees. \\
+
+\subsection{Guaranteed Services\\}
+\label{sec:intserv}
+
+Guaranteed Services guarantees specific resources for a specific flow, which means that can guarantee a QoS for the flow.The most popular mechanism of guaranteed services is the Integrated Services (IntServ), which uses the Resource Reservation Protocol (RSVP)\footnote{\href{http://tools.ietf.org/html/rfc2205}{Resource ReSerVation Protocol (RSVP) RFC 2205.}} as a signalling protocol, which is the responsible of sending specific messages to the network nodes to reserve the required resources per each data stream. RSVP declares the QoS requirements and characterise the traffic of the the flow.\\ 
+
+IntServ allows to differentiate three kinds of services: Guaranteed (real-time applications), Controlled load (applications that can adapt to network conditions within a certain performance window) and Best effort.\\
+
+Even though IntServ ensures the specific QoS required per each flow, it has large scalability problems because maintaining states by routers in high speed networks is difficult due to the very large number of flows., besides all the routers have to be RSVP compatible.\\   
+
+\subsection{Differential Services\\}
+\label{sec:diffserv}
+
+In a traditional Internet Protocol (IP) networks each router performs an IP lookup for each packet to determine the next-hop based on its own routing table, and forwards the packet to that router. Each router makes its own independent routing decisions, until the final destination is reached. Differentiated services avoids the independent routing decision moving that computational cost to the edges of the network.\\
+
+There are two main mechanisms to develop such kind of behaviour: DiffServ and MPLS-TE.\\
+
+\subsubsection{DiffServ\\}
+
+Due the limitations of IntServ (\ref{sec:intserv}), DiffServ appeared solving some of the problems. DiffServ consist on marking the packets with a priority stamp (Differentiated Service Code Point or DSCP) on the edge routers, and the core networks use this stamp to know the forwarding priority. This implies adding a labelling time, but since it is done in the edge routers, where the links speed are slower, it doesn't represent a problem.\\
+
+The advantage of DiffServ is that scalable, since it doesn't require the routers to maintain state information for each flow, which is a huge burden for the routers. However, it also has problems. One is that since the packets are marked just at the edge routers, it can not solve the congestion inside the domain, so it cannot provide per flow bandwidth and delay guarantees. For example, a lot of flows in the same class can be routed through the same link, thus cause congestion there.\\
+
+Another weakness of DiffServ is the lack of granularity for QoS guaranteed services, which makes it difficult to cost-effectively support end-to-end QoS according to the end-to-end situation (e.g., path lengths) of applications. With the conventional packet-level QoS mechanisms for the regulated traffic, i.e., buffer admission control plus output schedulers in general, increasing service granularity may inevitably complicate implementation and/or impact scalability since sophisticated output schedulers seem necessary in this case.\\
+
+
+\subsubsection{MPLS Traffic Engineering (MPLS-TE)\\}
+\label{sec:mpls-te}
+
+Multi-Protocol Label Switching (MPLS)\footnote{\href{http://www.ietf.org/rfc/rfc3031.txt}{MPLS architecture RFC 3031}} does a label switching instead. That means that the first router does a routing lookup but instead of finding a next-hop, it finds the final destination router and applies a label (or "shim") based on this information. The next routers will check this label to route the packet without needing to perform any additional IP lookups. The idea was to have only the first router doing an IP lookup, then all future routes in the network could do switching matching based on a label, reducing the load on the core routers, where high-performance was the most difficult to achieve, and distribute the routing lookups across edge routers.\\
+
+MPLS-TE takes advantage of the MPLS labels in order to provide an efficient way of forwarding traffic throughout the network, avoiding over-utilised links, adapting to changing bandwidth taking in account the configured bandwidth of the links.\\
+
+\subsubsection{MPLS-TE DiffServ Aware (DS-TE)\\}
+
+MPLS-TE Differential Services Aware (DS-TE) is a MPLS-TE able to detect the DCSP labels.\\
+
+
+%%%%%%%%%%%%%%%%%%%   END Quality of Service   %%%%%%%%%%%%%

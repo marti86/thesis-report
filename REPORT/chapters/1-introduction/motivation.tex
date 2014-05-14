@@ -1,0 +1,61 @@
+\section{Motivation}
+\label{sec:motivation}
+
+In the last 20 years networks requirements have been changing constantly, the amount of traffic have been increasing exponentially and more demanding end-to-end goals are needed. However, the networks architectures have been unchanged, increasing the complexity and hindering its configuration. In order to adapt to the new needs, new network paradigms such as Software-Defined Networking (SDN), cognitive networks or automatic networks are emerging fast due the interests of carriers and ISPs.
+
+The first things to analyse are the problems of the existing networks. They have become a barrier to creating new, innovative services, and an even larger barrier to the continued growth of the Internet. 
+
+Analysing the data plane in the ongoing networks architecture we find well defined layers for different purposes, making them autonomous. For instance the physical layer (fibre, copper, radio...) is independent of the link layer (ATM, X.25, PPP...), the transport layer (TCP, UDP...) or the application layer (HTTP, FTP, telnet...), what allows the evolution of each of them independently. Thanks to the fact of dividing the problem in tractable pieces, networks have been able to evolve, increasing many magnitude changes in terms of speed, scale or diversity of uses.
+
+On the other hand, there is the control plane which, unlike the data plane, has no abstraction layers at all. Within the control plane there are  several protocols to configure the network elements, such as Multiprotocol Label Switching (MPLS)\footnote{\href{http://www.ietf.org/rfc/rfc3031.txt}{MPLS architecture RFC 3031}} or NETCONF\footnote{\href{http://tools.ietf.org/html/rfc6241}{Network Configuration Protocol (NETCONF) RFC 6241}}. There are also a bunch of routing protocols e.g. Routing Information Protocol (RIP)\footnote{\href{http://tools.ietf.org/html/rfc2453}{RIP Version 2 RFC 2453}}, Enhanced Interior Gateway Routing Protocol (EIGRP)\footnote{\href{http://www.cisco.com/c/en/us/products/ios-nx-os-software/enhanced-interior-gateway-routing-protocol-eigrp/index.html}{CISCO Enhanced Interior Gateway Routing Protocol (EIGRP)}} or Shortest Path Bridging (SPB)\footnote{\href{http://standards.ieee.org/getieee802/download/802.1aq-2012.pdf}{SPB IEEE Std 802.1aq}}. 
+
+Protocols tend to be defined in isolation, however, with each solving a specific problem and without the benefit of any fundamental abstractions. This has resulted in one of the primary limitations of today's networks: complexity. For example, to add or move any device, IT must touch multiple switches, routers, firewalls, Web authentication portals, etc. and update ACLs, VLANs, Quality of Services (QoS), and other protocol-based mechanisms using device-level management tools. In addition, network topology, vendor switch model, and software version all must be taken into account. Due to this complexity, today's networks are relatively static as IT seeks to minimise the risk of service disruption.
+
+In order to deal with all that mess, hundreds of network monitoring and management tools\footnote{\href{http://www.slac.stanford.edu/xorg/nmtf/nmtf-tools.html}{Standford Network Monitoring and Management Tools list.}} have appeared trying to help the networks managers to have a control of their networks.
+
+At the same time that technology advances, the communications requirements also evolve. The claims that nowadays are needed in the different services that users demand, such as VoIP or streaming video in High Quality, where inconceivable when the architecture was designed.  
+
+All those factors have lead to an over-provisioning of the networks, increasing the cost, and wasting resources due the difficulty to optimise the control and adapt the physical resources available to the requirements of every instant. So it is time to take a step forward and evolve to a more optimal architecture, easy to manage, evolve and understand.  
+
+Here is where the SDN approach (explained in section \ref{sec:sdn}) comes to play. Having a clear abstraction layers and a centralised control plane, it's much easier to make a more efficient and dynamic management and control of the network, since we have a global overview of the network, and control over its entirety.
+
+%Open Shortest Path First (OSPF)\footnote{\href{http://tools.ietf.org/html/rfc5340}{OSPF for IPv6 RFC 5340}}
+
+The motivation of this Master's Thesis is to take advantage of the new centralised networking approach of SDN to develop a load balancing algorithm that adapt the route of each flow depending on the current state of the network in order to achieve a better resource allocation, reducing the overall cost and adapting its behaviour to the traffic growth.   
+
+%\begin{enumerate}
+%\item \label{pf1} Difficult to optimise.
+%\item \label{pf2} Difficult to customise. 
+%\item \label{pf3} Known problems.
+%\item \label{pf4} Capital costs.
+%\end{enumerate}
+
+%Point \ref{pf1} 
+%Point \ref{pf2} 
+%Point \ref{pf3} 
+%Point \ref{pf4} 
+
+
+%%%%%%%%%%%%    COGNITIVE NETWORKS   %%%%%%%%%%%%%%%%%%%
+
+%\section{Cognitive Networks}
+
+%Another hot topic which should be considered for this project is the concept of Cognitive Networks (CN), since the centralised controller of SDN allow us to sense the environment and act consequently. Looking at the relevant literature, we can find a huge number of definitions of CNs, one of them can be find in a paper written by the Department of Electrical and Computer Engineering at Virginia Tech cite{cognet-virginia}:
+
+%\emph{A cognitive network has a cognitive process that can perceive current network conditions, and then plan, decide and act on those conditions. The network can learn from these adaptations and use them to make future decisions, all while taking into account end- to-end goals}.
+
+%\figur{0.7}{cog-pro.png}{Cognitive process}{fig:cog-pro}
+
+%A CN operates in light of end-to-end goals. This means that the scope of the cognitive network is operating above the goals of the individual network elements. Instead, it operates within the scope of a data flow, which may include many network elements. Many flows may traverse a single network element, which means that the cognitive network needs to be able to prioritise these flows. By interacting with the Storage Area Network (SAN), the cognitive network tries to maintain a set of end-to-end goals (such as routing optimisations, connectivity, trust management, etc.) by modifying the elements of the SAN. The cognitive elements associated with each flow are allowed to act selfishly and independently (in the context of the entire network) to achieve local goals.
+
+%There are several mechanisms to apply the cognitive concepts to machine learning. The choice of machine learning algorithm depends on what the the network goals are and how these problems are set up. Complex cognitive networks may have several cognition processes operating, each using mechanisms appropriate for the problem being solved.
+
+
+%\subsection{Neural Networks}
+
+%\subsection{Genetic Algorithms}
+%\subsection{Expert Systems}
+%\subsection{Kalman Filters}
+%\subsection{Learning Automata}
+
+%%%%%%%%%%%%   END  COGNITIVE NETWORKS   %%%%%%%%%%%%%%%%%%%

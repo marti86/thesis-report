@@ -1,0 +1,32 @@
+\section{Traffic characterisation}
+\label{sec:traf-char}
+
+In order to provide the appropriate quality for each service, a traffic characterisation is needed. This section gives a global overview of the requirements of three different sorts of traffic: voice, video and web-browser.\\ 
+
+The International Telecommunication Union, Telecommunication Standardisation Sector (ITU-T) has a recommendation for "End-user multimedia QoS categories"\cite{ituG1010} which is shown in Figure \ref{fig:traf-char}. 
+
+\figur{1}{introduction/traf-char.png}{QoS requirements (ITU-T Rec. G.1010)}{fig:traf-char}
+
+Nonetheless, this document is old, and due the constant evolution of services, it is still studied by ITU-T Study Group 12 (Performance, QoS and QoE)\footnote{\href{http://www.itu.int/en/ITU-T/about/groups/Pages/sg12.aspx}{ITU-T Study Group 12 - Performance, QoS and QoE}}.\\ 
+
+Although the conditions of the voice and voice traffic have no changed significantly, the video requirements are much higher. For instance, in the mentioned document, the ITU-T describes the typical data rate of the videophone service between 16 and 384 Kbps, but if we check the requirements of Googles videophone service\footnote{\href{https://support.google.com/plus/answer/1216376?hl=en}{Google Hangouts system requirements}}, they suggest 1 Mbps for video-calls, and they mention that the minimum required is 256 Kbps outbound and 512 Kbps inbound.   
+
+Table \ref{table:trafchar} shows the QoS requirements for each of the 3 services mentioned above.
+
+\begin{table}[ht] 
+\caption{Performance targets for voice, video and web-browser applications} % title of Table 
+\centering % used for centering table 
+\begin{tabular}{c || c c c c} % centered columns (4 columns) 
+\hline\hline %inserts double horizontal lines 
+& &\multicolumn{2}{c}{Video} \\ \cline{3-4}
+  & Voice & One-way & Two-way & Web-browser \\ [0.5ex] % inserts table 
+%heading 
+\hline % inserts single horizontal line 
+Loss \% & 3 & 1 & 1 & 0 \\   \hline % inserting body of the table 
+Jitter (ms) & 10 & 10 & 10 & NA \\   \hline
+Delay (ms) & 150 & 10000 & 150 & 10000 \\   \hline
+Typical datarates & 64 Kbps & 512 Kbps & 512 Kbps & NA \\ [1ex] % [1ex] adds vertical space 
+\hline %inserts single line 
+\end{tabular} 
+\label{table:trafchar} % is used to refer this table in the text 
+\end{table}

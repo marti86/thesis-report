@@ -1,0 +1,288 @@
+\chapter{Cognitive Networks}
+
+Another hot topic which should be considered for this project is the concept of Cognitive Networks (CN), since the centralised controller of SDN allow us to sense the environment and act consequently. Looking at the relevant literature, we can find a huge number of definitions of CNs, one of them can be find in a paper written by the Department of Electrical and Computer Engineering at Virginia Tech \cite{cognet-virginia}:\\
+
+\emph{A cognitive network has a cognitive process that can perceive current network conditions, and then plan, decide and act on those conditions. The network can learn from these adaptations and use them to make future decisions, all while taking into account end- to-end goals}.\\
+
+%\figur{0.7}{cog-pro.png}{Cognitive process}{fig:cog-pro}
+
+A CN operates in light of end-to-end goals. This means that the scope of the cognitive network is operating above the goals of the individual network elements. Instead, it operates within the scope of a data flow, which may include many network elements. Many flows may traverse a single network element, which means that the cognitive network needs to be able to prioritise these flows. By interacting with the Storage Area Network (SAN), the cognitive network tries to maintain a set of end-to-end goals (such as routing optimisations, connectivity, trust management, etc.) by modifying the elements of the SAN. The cognitive elements associated with each flow are allowed to act selfishly and independently (in the context of the entire network) to achieve local goals.\\
+
+There are several mechanisms to apply the cognitive concepts to machine learning. The choice of machine learning algorithm depends on what the the network goals are and how these problems are set up. Complex cognitive networks may have several cognition processes operating, each using mechanisms appropriate for the problem being solved.\\
+
+\newpage
+
+\section{What can we do with OpenFlow/Floodlight?}
+
+First thing is to define de \emph{knobs and meters} with OpenFlow.
+
+\subsection{Knobs}
+
+\begin{enumerate}
+\item Routing decisions per flow basis.
+\item Bandwidth per flow.
+\item Firewall.
+\end{enumerate}
+
+
+\subsection{Meters}
+With the API REST that Floodlight provides, we can get the following parameters:
+\begin{enumerate}
+\item Aggrerate state across all switches, or for a specific switch
+	\begin{itemize}
+	\item Port
+	\item Queue
+	\item Flow
+	\end{itemize}
+\item List of all switch DPIDs connected to the controller
+\item Controller summary
+	\begin{itemize}
+	\item Number of switches
+	\item Number of links
+	\item Number of hosts
+	\item Inter-switch links
+	\end{itemize}
+\item List of global traffic counters per each port
+	\begin{itemize}
+	\item Tx/Rx/Dropped Packets/Bytes/Bits
+	\item Tx/Rx Errors
+	\end{itemize}
+\item Controller status
+	\begin{itemize}
+	\item Current controller memory usage
+	\item Controller uptime
+	\item Controller CPU\\
+	\end{itemize}
+\end{enumerate}
+
+Another important factor to be measured is the delay, which is not given by OpenFlow. So some other monitoring tools are needed. There are several tools that can be used, so there is the need of study which is the most appropriated,  
+
+\newpage
+
+\section{Cognitive algorithms}
+\subsection{QoS multicast routing protocol oriented to cognitive networks using competitive coevolutionary algorithm}
+\label{sec:cogMRT}
+
+In this paper \cite{cogMRT} they measure:\\ 
+
+\begin{description}
+\item [st:] Current load status of the nodes, based on CPU and MEMORY.
+\item [APT:] Application type.
+\item [APR:] Application requirements. 4 services levels (Diamond, Gold, Platinum, Bronze), with their own bounded requirements:
+	\begin{enumerate}
+	\item Bandwidth 
+	\item Delay
+	\item Jitter
+	\item Error rate
+	\end{enumerate}
+\item [User's QoS satisfaction:] depending on the APR.
+\item [Cost:] resources spent by the network.
+\item[Pricing:] satisfaction plus cost.\\
+\end{description}
+
+The cognitive behaviours for nodes:\\
+
+\begin{enumerate}
+\item \textbf{Sensation:} each node maintains 2 tables:
+\begin{enumerate}
+
+\item Neighbour information with the following fields: 
+\begin{enumerate}
+\item Name
+\item CPU utilisation 
+\item Memory utilisation
+\item Standby
+\end{enumerate}
+
+\item Link info: 
+\begin{enumerate}
+\item Reachable node
+\item Total BW 
+\item Available BW
+\item Delay
+\item Jitter
+\item Error rare
+\end{enumerate}
+\end{enumerate}
+
+\item \textbf{Sense of spatiality:} collecting topology information in a table:
+\begin{enumerate}
+\item Topology information table
+	 \begin{enumerate}
+	 \item Node ID: identifier of node.
+	 \item Linked list pointer:] points the list which stores routing information associated to the link.
+	 \item Linked list address:] address of the linked list of the node.
+	 \item Linked list of reachable nodes:] linked list storing the reachable nodes.
+	 \end{enumerate}
+\end{enumerate}
+
+\item \textbf{Memorisation:} experiential route information. Complete path discovered.
+\begin{enumerate}
+\item Experiential route table
+	\begin{enumerate}
+	\item Upstream node
+	\item Experiential route
+	\item BW interval
+	\item Delay interval
+	\item Jitter interval
+	\item Error rate interval
+	 \end{enumerate}
+\end{enumerate}
+
+\item \textbf{Learning:} maintenance of the experiential route information. Updated when links or nodes become invalid.
+
+\item \textbf{Reasoning:} Statistically summarise the usage of the links and speculate on the possible causes why the exceptions occur. They use 2 statistical counters:
+	\begin{enumerate}
+	\item $NF_{SM}$: time that the neighbour interface have been used.
+	\item $NS_{SM}$: time that the experiential routes have been used.
+	\end{enumerate}
+
+\item \textbf{Emotion:} statistical method to calculate the probability that a certain neighbour node is selected as a next hop by certain application type arriving at a certain destination node within a certain time period.
+\end{enumerate}
+
+\subsubsection{The algorithm: CogMRT}
+
+Based in the behaviours mentioned before, they designed the algorithm called cogMRT. This algorithm works on the classic Bellman-Ford algorithm (shortest paths from a single source vertex to all of the other vertices in a weighted digraph).\\
+
+Their protocol uses 2 kind of probing packets: short, and long distance. the structure of those packets is shown in \ref{fig:CogMRT-prob-pack}\\ 
+
+\figur{0.7}{preanalysys/CogMRT-prob-pack.png}{Structure of the probing packets in CogMRT}{fig:CogMRT-prob-pack}
+
+They compare it with QGMRP \cite{QGMRP} and the Shortest Path Tree (SPT), with different percentage of multicast group and in different topologies.\\
+
+The results shown how with CogMRT they achieve better user satisfaction and better utility of the network, but a higher multicast tree construction time than the other protocols (about 8 times more).\\
+
+\subsubsection{Traffic analysis required}
+
+In order to analyse this implementation, is needed:
+\begin{enumerate}
+\item Evaluate if the flows satisfy the application requirements (Delay, BW, Jitter, Error rate).
+\item Resources utilisation.
+\item Topology information.  
+\end{enumerate}
+
+
+\subsection{The adaptive routing algorithm depending on the traffic prediction model in cognitive networks}
+\label{sec:ATPRA}
+
+In this paper\cite{ATPRA} they propose a Minimum WorkLoad routing algorithm (MWL) in cognitive networks which is depending on the prediction traffic model.\\
+
+The prediction model they use is the Minimum Mean Square Error (MMSE) due can be used for on-line prediction application based on its simple and fast predict characteristics. \\
+
+The process of the routing selection has 3 steps:
+\begin{enumerate}
+\item At the begining of the transmission the source node sends to the Traffic Prediction Server (TPS) indicating: source address, destination address and the traffic threshold.
+\item TPS collects traffic data and and uses MMSE to forecast the traffic of each link. The input of MMSE is the current data and the subsequent time slices prediction data (see Figure \ref{fig:TPS-alg}).
+\item Source node receives message from TPS and implement corresponding manipulation.
+\end{enumerate}
+
+\figur{0.7}{preanalysys/TPS-alg.png}{Traffic prediction algorithm}{fig:TPS-alg}
+
+The output of the traffic prediction is used by the Adaptive Traffic Prediction Routing Algorithm (ATPRA) to forecast the traffic data on possible links to select a route aggregate the predicting traffic load on the length load. The algorithm is shown in Figure \ref{fig:ATPRA-alg}.\\  
+
+\figur{0.6}{preanalysys/ATPRA-alg.png}{Traffic prediction algorithm}{fig:ATPRA-alg}
+
+Where:
+\begin{description}
+\item[$SA$:] Source Address
+\item[$DA$:] Destination Address
+\item[$K_{t}$:] Traffic threshold
+\item[$\alpha$:] Proportion of Traffic weighting constant ($T_{n}$) of $link_{n}$  
+\item[$\beta$:]  Proportion of Length weighting constant ($L_{n}$) of $link_{n}$
+\item[$\alpha \times T_{n}+\beta \times L_{n}$:] Aggregated load of $link_{n}$
+\end{description}
+
+%\figur{0.7}{preanalysys/ATPRA-11.png}{}{fig:ATPRA-11}
+%\figur{0.7}{preanalysys/ATPRA-12.png}{}{fig:ATPRA-12}
+%\figur{0.7}{preanalysys/ATPRA-13.png}{}{fig:ATPRA-13}
+%\figur{0.7}{preanalysys/ATPRA-14.png}{}{fig:ATPRA-14}
+
+This method is implemented in Matlab, recording 50 sequences of the history traffic data, and the current traffic is random generated at different bit rates.\\
+
+They compare their ATPRA with Dijkstra and MWL at performance of routing trace, transmission delay and load balance of the entire network.\\
+
+The results they show have not significant improvements respect the others methods.
+
+\subsection{Efficient traffic aware multipath routing algorithm in cognitive networks}
+\label{sec:ETAMR}
+
+This paper\cite{ETAMR} is the continuation of the one commented above (\ref{sec:ATPRA}).They propose a multi-path routing algorithm (ETAMR), which is established over the cognitive network framework to adaptively and automatically establish the suitable routes, and based on the traffic prediction model to find the shortest transmission delay and balance in traffic load.\\
+
+The traffic prediction model is exactly the same as in the previous paper \cite{ATPRA} (see section \ref{sec:ATPRA}) Minimum Mean Square Error (MMSE).\\
+
+
+\begin{enumerate}
+
+\item \textbf{Multipath Routing Discovery Scheme}
+	\begin{enumerate}
+	\item The Cognitive process (CP) sends time synchronisation messages to all the network elements. All nodes send broadcast control packets and forms a neighbour table. Each node sends source address ($N_{s}$) and destination address ($N_{d}$) to CP. CP uses distance-vector routing algorithm to work out the possible routes and adjacency nodes matrix.
+	\item The CP uses MMSE to forecast traffic of each link. it estimates the delay based on:
+		\begin{itemize}
+		\item $t_{i}(Q)$: queuing delay of the packet in the node.
+		\item $t_{i}(H)$: delay generated by sending time.
+		\item $F/b_{i}$: $F$ is the amount of data and $b_{i}$ the usable bandwidth of $link_{n}$
+		\end{itemize}
+	\item CP records several suitable paths and sends messages to modifiable elements updating their neighbour tables.\\	
+	\end{enumerate}
+
+\item \textbf{Multipath Route Establishment}
+	\begin{enumerate}
+	\item Calculates the weight value ($C$) on each link, considering, per each link: 
+		\begin{enumerate}
+		\item $\alpha\times F_{n}$: Proportion ($\alpha$) of Traffic Load ($F_{n}$).
+		\item $\beta\times L_{n}$: Proportion ($\beta$) of Transmission Hops ($L_{n}$)
+		\item $\gamma\times T_{n}$: Proportion ($\gamma$) of Processing Time ($T_{n}$)
+		\end{enumerate}
+ 	\item ETAMR takes the route with lowest $C$
+	\item If traffic congestion is predicted during transmission the CP sends control messages to trigger the suboptimal backup path.
+	\item When the congestion disappears the backup path is disabled.\\ 
+	\end{enumerate}
+
+
+\item \textbf{Traffic Load Balancing Mechanism}
+	\begin{enumerate}
+	\item If congestion probability $P_{i}(t)$ of the node $N_{i}$ on the primary path at time $t$ exceeds the mean congestion probability, the suboptimal path will be activated to transmit a certain percent of the traffic load.
+	\end{enumerate}
+
+	
+\end{enumerate}
+
+
+\subsubsection{Traffic analysis required}
+In order to analyse this implementation, is needed:
+\begin{enumerate}
+\item Traffic measurements.
+\item Adjacency nodes matrix.
+\item Resources utilisation.
+\item Delay estimation.
+	\begin{itemize}
+	\item Queuing delay.
+	\item Sending time delay.
+	\item Amount of data and usable bandwidth.
+	\end{itemize}
+\item Topology information.  
+\end{enumerate}
+
+
+\section{How can we set a demo?}
+
+\begin{enumerate}
+\item Define the scenario
+	\begin{itemize}
+	\item Software used
+		\begin{itemize}
+		\item Network simulation (Mininet)
+		\item SND Controller (Floodlight)
+		\item Monitoring tools (Floodlight? sFlow? NetFlow? Wireshark?)
+		\item Traffic generators (iperf? Netcat? mgen?)
+		\end{itemize}
+	\item Define the topology 
+	\end{itemize}
+\item Define the goals (QoS requirements, speed, fault tolerance...)
+\item Measure the results without cognitive process 
+\item Design and apply the algorithm
+\item Measure the results with the cognitive process
+\end{enumerate}
+
+
+

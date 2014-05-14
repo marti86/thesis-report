@@ -1,0 +1,45 @@
+\chapter{Scenario Description}
+\label{ch:scenario}
+
+\textit{ In this chapter  }
+
+\input{chapters/3-Scenario/mininet.tex}
+
+Mininet is an open source software that allows to emulate an entire network. It is the main tool for Software-Defined Networking testbed environments to design, undergo and verify OpenFlow projects.\\
+ 
+Mininet provides a high level of flexibility since topologies and new functionalities are programmed using python language. It also provides a scalable prototyping environment, able to manage up to 4000 switches on a regular computer. This is possible thanks to a OS-level virtualization features, including processes and network namespaces, which allows to have different and separate instances of network interfaces and routing tables that operate independent of each other. \\
+
+Unlike other simulators, like ns-2\footnote{\href{http://www.isi.edu/nsnam/ns/}{The Network Simulator-ns-2}} or Riverbed Modeler\footnote{\href{http://www.riverbed.com/products/performance-management-control/network-performance-management/network-simulation.html}{Riverbed Modeler}}, which lack realism and the code created in the simulator needs to be changed to be deployed in the real network, Mininet needs no changes on code either configuration when applied to hardware-based networks, offering a realistic behaviour with a high degree of confidence. Another advantage in front of other simulators is that allows real time interaction.\\ 
+
+There are four topology elements that Mininet can create:\\
+\begin{description}
+\item[Link:] emulates a wired connection between two virtual interfaces which act as a fully functional Ethernet ports. Packets sent through one interface are delivered to the other. It is possible to configure Traffic Control for the links importing the TCLink library\footnote{\href{http://mininet.org/api/classmininet_1_1link_1_1TCLink.html}{mininet.link.TCLink Class Reference}} via the Python API.
+\item[Host:] emulates a linux computer. Is simply a shell process moved into its own namespace, from where commands can be called. Each host has its own virtual Ethernet interface.
+\item[Switch:] software OpenFlow switches provide the same packet delivery semantics that would be provided by a hardware switch.
+\item[Controller:] Mininet allows to create  controller within the same emulation or to connect the emulated network to an external controller running anywhere there is IP connectivity with the machine where Mininet is running. 
+\end{description}
+
+Figure \ref{fig:mininetArchitecture} shows the elements in a simple network with 2 hosts connected to one switch.
+
+The topology script used for this project is shown in Appendix \ref{sec:topoScript}
+
+\figur{0.7}{scenario/mininet-namespace.png}{Mininet internal architecture with 2 hosts, 2 links, 1 switch and 1 controller (image from openflowswitch.org)}{fig:mininetArchitecture}
+
+\input{chapters/3-Scenario/floodlight.tex}
+
+\textit{ {\color{red}
+\begin{itemize}
+\item what is it?
+\item Why Floodlight? (justification of selection)
+\item how it works? (brief explanation about the structure and it's behaviour)
+\item main parts involved with the algorithm (listeners of events, forwarding module...)
+\end{itemize}
+}}
+
+\input{chapters/3-Scenario/topology.tex}
+
+\textit{ {\color{red} Explanation about the topology used, justification of why I use this topology }}
+
+\figur{1}{scenario/Topology.png}{Topology used.}{fig:topology}
+
+%\section{Conclusion}

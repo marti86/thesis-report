@@ -1,0 +1,149 @@
+\section{OpenFlow}
+\label{sec:openflow}
+
+In the current networks (i.e. non SDN), the routers and switches makes the forwarding (data path) and routing (control path) decisions by itself. In an OpenFlow switch, those decisions are divided between the network element (i.e. the switch) and the controller. Such division keeps the data path on the network element, while high-level routing are moved to the NOS.\\
+
+OpenFlow is the protocol used to communicate the NOS (controller) with all the Network Elements (NE). Is an open standard that provides a standardised hook to allow researchers to run experiments, without requiring vendors to expose the internal workings of their network devices. OpenFlow is currently being implemented by major vendors, with OpenFlow-enabled switches now commercially available.\\
+
+OpenFlow is the most common protocol used in SDN networks, and is often confused with the SDN concept itself, but they are different things. While SDN is the architecture dividing the layers, OpenFlow is just a protocol proposed to convey the messages from the control layer to the network elements. There is a bunch of OpenFlow based projects\footnote{\href{http://yuba.stanford.edu/~casado/of-sw.html}{List of OpenFlow Software Projects.}}, including several controllers, virtualised switches and testing applications.  \\
+
+\subsection{Flow Tables}
+
+Each NE has a flow table which contains a set of flow entries. Each flow entry is written by the controller, which computes the routing decisions sending the corresponding rules to each switch. Those flow entries consist of a determinate actions (e.g forward packet through specified port) to do with packets which headers contains a particular values (e.g. packets with a specific destination).\\
+
+If no match is found for an incoming packet, this is forwarded to the controller over a secure channel, and it is the controller who manage the flow entries of the NEs adding or removing flow entries in order to accomplish the stablished rules.
+
+Each flow entry consists of three fields: header fields, counters and actions. The process by which each incoming packet is matched against is explained in the next points.
+
+\subsubsection{Header Fields}
+
+Aiming to determine each flow, there are several fields that can be matched. The header fields that incoming packets are compared against are the following ones:
+
+\begin{itemize}
+\item Ingress Port
+\item Ethernet Source
+\item Ethernet Destination
+\item Ethernet Type
+\item VLAN ID
+\item VLAN Priority
+\item IP Source
+\item IP Destination
+\item IP Protocol
+\item IP ToS bits
+\item TCP/UDP Source Port
+\item TCP/UDP Destination Port
+\end{itemize}
+
+\subsubsection{Counters}
+
+Each switch maintains per-table, per-flow, per-port and per-queue. The counters for use are listed in Table \ref{table:counters}. Those values can be obtained through polling requests to the network elements.
+
+\begin{table}[ht]
+\caption{Openflow Counters}
+\begin{tabular}{ | p{2.9cm} || p{3cm} || p{3.5cm} || p{4.2cm} | }
+  \hline
+ \begin{center} \textbf{Per Table} \end{center} & \begin{center} \textbf{Per Flow} \end{center} & \begin{center} \textbf{Per Port} \end{center} & \begin{center} \textbf{Per Queue}\end{center} \\ \hline  \hline   
+  Active Entries & Received Packets & Received Packets & Transmit Packets   \\ \hline
+  Packet Lookups & Received Bytes & Transmitted Packets & Transmit Bytes  \\ \hline
+  Packet Matches & Duration (sec) & Received Bytes & Transmit Overrun Errors \\ \hline
+   & Duration (nano) & Transmitted Bytes &  \\ \cline{2-3}
+   & & Receive Drops &  \\ \cline{3-3}
+   & & Transmit Drops &  \\ \cline{3-3}
+   & & Receive Errors &  \\ \cline{3-3}
+   & & Transmit Errors &  \\ \cline{3-3}
+   & & Receive Frame Alignment Errors &  \\ \cline{3-3}
+   & & Receive Overrun Errors &  \\  \cline{3-3} 
+   & & Receive CRC Errors  &  \\ \cline{3-3}
+   & & Collisions & \\    \hline
+\end{tabular}
+\label{table:counters}
+\end{table}
+
+
+\subsubsection{Actions}
+
+Each flow entry is associated with zero or more actions that determine the behaviour of the network element when there is a matching in a incoming packet. There are several types of actions. However, just some of them are not supported in all the OpenFlow switches. When the NE connects to the controller (see Figure fig:OFHandshake), it indicates which of the optional actions it supports. \\
+
+The required actions are:
+
+
+
+
+\begin{description}
+\item[Forward:] forwarding the packet to physical ports.
+	\begin{itemize}
+	\item ALL: send the packet to all the interfaces less the incoming one.
+	\item CONTROLLER: send the packet to the controller.
+	\item LOCAL:  send the packet to the switches networking stack.
+	\item TABLE: perform actions in flow table.
+	\item IN\_PORT: send the packet through the incoming port.
+	\end{itemize}
+\item[Drop:] if there is no specified action, the flow entry indicates that the matching packets should be dropped.
+\end{description}
+
+And the optionals:
+
+\begin{description}
+\item[Forward:] forwarding the packet to physical ports.
+	\begin{itemize}
+	\item NORMAL: Process the packet using the traditional forwarding path supported by the switch (i.e. traditional L2, VLAN, and L3 processing.)
+	\item FLOOD: Flood the packet along the minimum spanning tree, not including the incoming interface.
+	\end{itemize}
+ \item[Enqueue:] forwards a packet by some specific queue of the port. Used to provide basic QoS
+ \item[Modify-Field:] this action increases the usefulness of an OpenFlow implementation, allowing to modify the following fields of an incoming packet:
+	\begin{itemize}
+	\item VLAN ID: adds, modifies, strips or replace the VLAN header. 
+	\item Ethernet Source MAC: modifies source MAC address.
+	\item Ethernet Destination MAC: modifies destination MAC address.
+	\item IPv4 source: modifies source IPv4 address.
+	\item IPv4 destination: modifies destination IPv4 address.
+	\item IPv4 ToS bits: replaces the existing IP Type of Service bits.
+	\item Transport source port: replaces the existing source port.
+	\item Transport destination port: replaces the existing destination port.
+	\end{itemize}
+\end{description}
+
+
+\subsection{Messages}
+
+The protocol, described in \cite{openflow}, defines three sort of messages, \emph{controller-to-switch}, \emph{asynchronous} and \emph{symmetric}. For instance, when the controller detects a new switch connected, it starts a handshake process (illustrated at Figure \ref{fig:OFHandshake}) starting with a symmetric \emph{Hello} message, and followed by two controller-to-switch messages: \emph{Features} and \emph{Configuration}.
+
+\figur{0.5}{preanalysys/OFHandshake.png}{OpenFlow messages for Controller-Switch Handshake}{fig:OFHandshake}
+ 
+ The different types of messages are described briefly in the next points.
+ 
+ \subsubsection{Controller-to-switch}
+ 
+ Controller-to-switch messages are initiated by the controller. Their finality is to get parameters from the NEs or manage them. The different kinds are listed in the next points.
+ 
+ \begin{description}
+\item[Features:] Requesting the specific capabilities of the switch.
+\item[Configuration:] Set and query configuration parameters in the switch.
+\item[Modify-State:] Their primary purpose is to add or delete flows in the flow tables and to set switch port properties.
+\item[Read-State:] Used to collect statistics from every switch.
+\item[Send-Packet:] Used to send packets out of a specified port on the switch.
+\item[Barrier:] Used to ensure message dependencies have been met or to receive notifications for completed operations.
+\end{description}
+
+ 
+ \subsubsection{Asynchronous}
+ 
+ Asynchronous messages are sent from the network elements to the controller when some event occurs. The four different types of asynchronous messages are described beneath. 
+ 
+ \begin{description}
+\item[ Packet-in:] When a packet arrives to the network element and this doesn't match with any entry of the flow table, a message is send to the controller asking what to do with. By default it includes the first 128 bytes of the packet header. 
+\item[ Flow-Removed:] Message sent when a flow entry expires or it is removed from a network element.
+\item[ Port-Status:] Sent by the network element when state configuration state (such as port brought down directly by a user) changes.
+\item[ Error:] Messages indicating some errors in the network element.
+\end{description}
+
+ 
+ \subsubsection{Symmetric}
+ 
+ Symmetric messages are sent without solicitation, in either direction. The 3 different sort of messages are the following ones:
+ 
+ \begin{description}
+\item[ Hello:] Sent when connection startup as a handshake.
+\item[ Echo:] Used to indicate latency, bandwidth or liveness of a controller-NE connection. It must return an echo reply.
+\item[ Vendor:] Pretends to offer additional functionality. Meant for future OpenFlow revisions. 
+\end{description}
